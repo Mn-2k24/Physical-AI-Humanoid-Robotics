@@ -146,3 +146,14 @@ drafts/
 notes/
 TODO.md
 NOTES.md
+
+# Lighthouse cache
+undefined:/
+lighthouse*/
+.lighthouse*/
+
+# Node
+node_modules/
+build/
+.docusaurus/
+.cache-loader/
