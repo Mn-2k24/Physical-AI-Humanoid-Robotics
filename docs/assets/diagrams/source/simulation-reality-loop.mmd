@@ -1,0 +1,22 @@
+graph LR
+    A[1. Design Robot CAD] --> B[2. Export to URDF]
+    B --> C[3. Simulate in Gazebo/Isaac]
+    C --> D[4. Train RL Policies]
+    D --> E{Simulation Success > 90%?}
+    E -->|No| C
+    E -->|Yes| F[5. Deploy to Real Robot]
+    F --> G[6. Measure Real Performance]
+    G --> H{Real Success > 80%?}
+    H -->|No| I[7. Update Simulation Parameters]
+    I --> C
+    H -->|Yes| J[8. Production Deployment]
+    J --> K[9. Continuous Monitoring]
+    K -->|Failures Detected| I
+
+    style A fill:#e1f5ff
+    style C fill:#fff4e1
+    style D fill:#ffe1f5
+    style F fill:#ffe1e1
+    style J fill:#e1ffe1
+    style E fill:#ffffe1
+    style H fill:#ffffe1

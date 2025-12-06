@@ -1,0 +1,36 @@
+graph TB
+    subgraph "Physical AI System"
+        A[Physical Environment] -->|Sensors| B[Perception]
+        B -->|State Estimation| C[Reasoning/Planning]
+        C -->|Motor Commands| D[Actuation]
+        D -->|Physical Actions| A
+    end
+
+    subgraph "Challenges"
+        E[Sensor Noise] -.-> B
+        F[Real-Time Constraints] -.-> C
+        G[Physics/Dynamics] -.-> D
+        H[Unpredictability] -.-> A
+    end
+
+    subgraph "Tools & Middleware"
+        I[ROS 2 Communication]
+        J[Simulation Gazebo/Isaac]
+        K[AI/ML PyTorch/TF]
+    end
+
+    B -.Uses.-> I
+    C -.Uses.-> I
+    C -.Uses.-> K
+    D -.Uses.-> I
+
+    C -.Trains in.-> J
+
+    style A fill:#e1f5ff
+    style B fill:#fff4e1
+    style C fill:#ffe1f5
+    style D fill:#e1ffe1
+    style E fill:#ffe1e1
+    style F fill:#ffe1e1
+    style G fill:#ffe1e1
+    style H fill:#ffe1e1

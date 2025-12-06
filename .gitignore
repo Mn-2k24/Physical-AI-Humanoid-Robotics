@@ -1,0 +1,148 @@
+# Physical AI & Humanoid Robotics Book - Git Ignore
+# Generated: 2025-12-04
+
+# ==========================================
+# Node.js / Docusaurus
+# ==========================================
+node_modules/
+/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Docusaurus build output
+.docusaurus/
+.docusaurus
+.cache-loader
+build/
+/build
+.cache/
+dist/
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ==========================================
+# Python (for code examples & verification scripts)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ==========================================
+# ROS 2 / Robotics
+# ==========================================
+install/
+log/
+build/
+devel/
+*.launch.py~
+*.urdf~
+
+# ==========================================
+# LaTeX (for TikZ diagrams)
+# ==========================================
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.pdf
+*.dvi
+
+# ==========================================
+# Environment & Secrets
+# ==========================================
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.key
+*.pem
+*.crt
+secrets/
+.secrets
+
+# ==========================================
+# IDE & Editor
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
+# OS Generated
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# Temporary & Cache
+# ==========================================
+*.tmp
+*.temp
+*.log
+*.cache
+.cache/
+tmp/
+temp/
+
+# ==========================================
+# Zotero (local library - export to BibTeX instead)
+# ==========================================
+*.zotero
+zotero/
+storage/
+
+# ==========================================
+# Project Specific
+# ==========================================
+# Keep BibTeX export but ignore Zotero library
+docs/references.bib.bak
+
+# Tutorial verification outputs
+tutorials/*/output/
+tutorials/*/.pytest_cache/
+
+# Beta testing feedback (confidential)
+beta-testing/
+feedback/
+
+# Draft content (personal notes)
+drafts/
+notes/
+TODO.md
+NOTES.md
