@@ -87,6 +87,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
+  
 }
 
 /* Code block enhancements */
@@ -174,6 +175,13 @@ blockquote {
   .heroSubtext p {
     max-width: 100%;
   }
+
+  .navbar__logo {
+  max-width: 60px;     /* Adjust width as needed */
+  height: auto;         /* Preserve aspect ratio */
+  display: block;       /* Remove inline spacing */
+  margin: 0 auto;            /* Adjust top/bottom as needed */
+}
 
   /* Feature cards mobile optimizations */
   .featureCard {
