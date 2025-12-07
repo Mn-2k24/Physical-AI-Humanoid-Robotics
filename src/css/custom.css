@@ -44,15 +44,16 @@
   max-width: 800px;
   margin: 0 auto;
 }
-
+/* 
 /* Feature cards styling */
-.featureCard {
+/* .featureCard {
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
   padding: 1.5rem;
   height: 100%;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   background: var(--ifm-background-surface-color);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .featureCard:hover {
@@ -78,17 +79,17 @@
 .featureEmoji {
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: 1rem;
-}
+} */ 
 
 /* Custom button spacing */
-.buttons {
+/* .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1rem;
   
-}
+}  */
 
 /* Code block enhancements */
 code {
@@ -186,6 +187,7 @@ blockquote {
   /* Feature cards mobile optimizations */
   .featureCard {
     padding: 1rem;
+    
   }
 
   /* Force single column layout for feature cards */

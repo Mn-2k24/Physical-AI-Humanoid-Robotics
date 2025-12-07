@@ -10,6 +10,38 @@
   overflow: hidden;
 }
 
+.heroSubtext {
+  margin-top: 1.5rem;
+  color: var(--ifm-color-secondary);
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+}
+.buttons a {
+  display: inline-block;
+  padding: 0.50rem 1.5rem;
+  border-radius: 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-200);
+  background-color: transparent;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.buttons a:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-primary);
+}
+
+/* index.module.css */
+/* index.module.css */
+
 /* Tablet and below */
 @media screen and (max-width: 996px) {
   .heroBanner {

@@ -81,7 +81,7 @@ export default function HomepageFeatures(): ReactNode {
     <section className={styles.features}>
       <div className="container">
         <div className={clsx('text--center', styles.featuresHeader)}>
-          <Heading as="h2">4 Progressive Modules</Heading>
+          <Heading as="h2">Four Progressive Modules</Heading>
           <p className="hero__subtitle">
             From ROS 2 basics to advanced VLA-controlled humanoid systems
           </p>
