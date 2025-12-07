@@ -129,10 +129,10 @@ When citing this book in academic work, please use:
 ```bibtex
 @book{PhysicalAIHumanoidRobotics2025,
   title = {Physical AI \& Humanoid Robotics: A Practical Guide with ROS 2, Gazebo, and Isaac Sim},
-  author = {[Author Name]},
+  author = {[Nizam ul din]},
   year = {2025},
   publisher = {Self-published},
-  url = {https://nizam.github.io/physical-ai-humanoid-robotics/},
+  url = {https://physical-ai-humanoid-robotics-zeta.vercel.app/},
   note = {Open-source robotics textbook with companion code repository}
 }
 ```
@@ -185,7 +185,7 @@ cp references/"Physical AI & Humanoid Robotics.bib" ~/my-paper/references.bib
 
 If you identify citation errors, missing attributions, or outdated links, please submit an issue:
 
-**GitHub Issues**: [https://github.com/nizam/physical-ai-code/issues](https://github.com/nizam/physical-ai-code/issues)
+**GitHub Issues**: [https://github.com/Mn-2k24/Physical-AI-Humanoid-Robotics/issues](https://github.com/Mn-2k24/Physical-AI-Humanoid-Robotics/issues)
 
 ---
 
