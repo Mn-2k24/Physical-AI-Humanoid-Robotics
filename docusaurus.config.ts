@@ -41,26 +41,11 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          // Edit this page links point to the book repository
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/Mn-2k24/Physical-AI-Humanoid-Robotics/tree/main/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false, // Blog disabled for book-focused content
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -160,7 +145,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub (Book)',
-              href: 'https://mn-2k24.github.io/Physical-AI-Humanoid-Robotics/',
+              href: 'https://physical-ai-humanoid-robotics-zeta.vercel.app/',
             },
             {
               label: 'GitHub (Code)',
@@ -169,7 +154,9 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics. Built with Docusaurus.<br><span style="font-size:0.9em; color:#ccc;">Created with ❤️ by Nizam ul din</span>`
+      ,
+      
     },
     prism: {
       theme: prismThemes.github,

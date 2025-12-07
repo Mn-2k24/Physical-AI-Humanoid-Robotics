@@ -1,30 +1,261 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Custom CSS for Physical AI & Humanoid Robotics Book
+ * Theme: Tech/Robotics (Blue/Teal palette)
  */
 
-/* You can override the default Infima variables here. */
+/* Primary color palette - Robotics blue/teal theme */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #0077be;
+  --ifm-color-primary-dark: #006ba9;
+  --ifm-color-primary-darker: #00659e;
+  --ifm-color-primary-darkest: #005382;
+  --ifm-color-primary-light: #0083d3;
+  --ifm-color-primary-lighter: #0089de;
+  --ifm-color-primary-lightest: #009fff;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(0, 119, 190, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Dark mode - Brighter teal for better contrast */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #00d4ff;
+  --ifm-color-primary-dark: #00bfe6;
+  --ifm-color-primary-darker: #00b4d9;
+  --ifm-color-primary-darkest: #0094b3;
+  --ifm-color-primary-light: #1addff;
+  --ifm-color-primary-lighter: #33e2ff;
+  --ifm-color-primary-lightest: #66e9ff;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 212, 255, 0.2);
+}
+
+/* Hero section styling */
+.hero__subtitle {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+.heroSubtext {
+  margin-top: 2rem;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.heroSubtext p {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Feature cards styling */
+.featureCard {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  background: var(--ifm-background-surface-color);
+}
+
+.featureCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 119, 190, 0.15);
+  border-color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .featureCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.25);
+}
+
+.featureLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.featureLink:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.featureEmoji {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+/* Custom button spacing */
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* Code block enhancements */
+code {
+  background-color: rgba(0, 119, 190, 0.08);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
+}
+
+[data-theme='dark'] code {
+  background-color: rgba(0, 212, 255, 0.12);
+}
+
+/* Navbar enhancements */
+.navbar {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Fix the logo size and position */
+.navbar__logo {
+  max-width: 80px;     /* Adjust width as needed */
+  height: auto;         /* Preserve aspect ratio */
+  display: block;       /* Remove inline spacing */
+  margin: 0 auto;            /* Adjust top/bottom as needed */
+}
+
+
+/* Table of contents enhancements */
+.table-of-contents {
+  font-size: 0.9rem;
+}
+
+/* Markdown content enhancements - Fluid typography */
+article h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 1.5rem;
+}
+
+article h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+  padding-bottom: 0.5rem;
+}
+
+/* Blockquote styling for learning objectives */
+blockquote {
+  border-left: 4px solid var(--ifm-color-primary);
+  background-color: rgba(0, 119, 190, 0.05);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+[data-theme='dark'] blockquote {
+  background-color: rgba(0, 212, 255, 0.08);
+}
+
+/* Admonitions enhancement */
+.admonition {
+  border-radius: 6px;
+}
+
+/* Footer styling */
+.footer {
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ======================================== */
+
+/* Mobile devices (<768px) */
+@media (max-width: 767px) {
+  /* Hero section mobile optimizations */
+  .hero__subtitle {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+  }
+
+  .heroSubtext {
+    margin-top: 1rem;
+    padding: 0 1rem;
+  }
+
+  .heroSubtext p {
+    max-width: 100%;
+  }
+
+  /* Feature cards mobile optimizations */
+  .featureCard {
+    padding: 1rem;
+  }
+
+  /* Force single column layout for feature cards */
+  .col.col--6 {
+    --ifm-col-width: 100%;
+  }
+
+  /* Buttons - vertical stacking and touch targets */
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* Blockquote mobile optimization */
+  blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+
+  /* Article heading mobile optimization */
+  article h1 {
+    margin-bottom: 1rem;
+  }
+
+  article h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Tablet devices (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Feature cards tablet optimization */
+  .featureCard {
+    padding: 1.25rem;
+  }
+
+  /* Ensure 2-column grid on tablet */
+  .col.col--6 {
+    --ifm-col-width: 50%;
+  }
+
+  /* Hero section tablet adjustments */
+  .heroSubtext {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .footer,
+  .table-of-contents {
+    display: none;
+  }
+
+  article {
+    max-width: 100%;
+  }
+
+  .featureCard {
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+}
+
+/* Ensure images are always responsive */
+img {
+  max-width: 100%;
+  height: auto; 
+  
 }

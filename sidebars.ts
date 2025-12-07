@@ -2,6 +2,7 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 
 // Sidebar configuration for Physical AI & Humanoid Robotics Book
 // Organized by 4 modules with progressive learning path
+// Note: Docusaurus automatically strips number prefixes (01-, 02-, etc.) from document IDs
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -9,6 +10,16 @@ const sidebars: SidebarsConfig = {
       type: 'doc',
       id: 'intro',
       label: 'Introduction',
+    },
+    {
+      type: 'doc',
+      id: 'preface',
+      label: 'Preface',
+    },
+    {
+      type: 'doc',
+      id: 'learning-objectives',
+      label: 'Learning Objectives',
     },
     {
       type: 'category',
@@ -69,10 +80,16 @@ const sidebars: SidebarsConfig = {
       items: [
         'appendices/hardware-setup',
         'appendices/software-installation',
+        'appendices/sim-to-real-deployment',
         'appendices/troubleshooting',
         'appendices/glossary',
         'appendices/resources',
       ],
+    },
+    {
+      type: 'doc',
+      id: 'references',
+      label: 'References',
     },
   ],
 };

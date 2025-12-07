@@ -1,57 +1,77 @@
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
+import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  emoji: string;
   description: ReactNode;
+  link: string;
 };
 
-const FeatureList: FeatureItem[] = [
+const ModuleList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Module 1: ROS 2 Middleware',
+    emoji: '🔧',
+    link: '/docs/module-1-ros2',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Master the communication backbone for robotics. Learn ROS 2 nodes, topics, services,
+        and URDF robot modeling. Build your first "Hello World" system with Python rclpy.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Module 2: Digital Twin Simulation',
+    emoji: '🌐',
+    link: '/docs/module-2-simulation',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Test robot behaviors in realistic physics environments. Use Gazebo and Unity
+        for simulation, sensor modeling (LiDAR, cameras, IMU), and safe prototyping.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Module 3: NVIDIA Isaac Platform',
+    emoji: '🚀',
+    link: '/docs/module-3-isaac',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Leverage GPU-accelerated AI for perception and navigation. Learn Isaac Sim,
+        synthetic data generation, VSLAM, object detection, and Nav2 path planning.
+      </>
+    ),
+  },
+  {
+    title: 'Module 4: Vision-Language-Action',
+    emoji: '🗣️',
+    link: '/docs/module-4-vla',
+    description: (
+      <>
+        Enable natural language control of humanoid robots. Integrate speech recognition
+        (Whisper), cognitive planning with LLMs, and build a voice-controlled capstone project.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, emoji, description, link}: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
-      </div>
+    <div className={clsx('col col--6')}>
+      <Link to={link} className={styles.featureLink}>
+        <div className={styles.featureCard}>
+          <div className="text--center">
+            <div className={styles.featureEmoji}>{emoji}</div>
+          </div>
+          <div className="text--center padding-horiz--md">
+            <Heading as="h3">{title}</Heading>
+            <p>{description}</p>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }
@@ -60,10 +80,23 @@ export default function HomepageFeatures(): ReactNode {
   return (
     <section className={styles.features}>
       <div className="container">
+        <div className={clsx('text--center', styles.featuresHeader)}>
+          <Heading as="h2">4 Progressive Modules</Heading>
+          <p className="hero__subtitle">
+            From ROS 2 basics to advanced VLA-controlled humanoid systems
+          </p>
+        </div>
         <div className="row">
-          {FeatureList.map((props, idx) => (
+          {ModuleList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
+        </div>
+        <div className={clsx('text--center', styles.featuresFooter)}>
+          <Link
+            className="button button--primary button--lg"
+            to="/docs/learning-objectives">
+            View Learning Objectives →
+          </Link>
         </div>
       </div>
     </section>
