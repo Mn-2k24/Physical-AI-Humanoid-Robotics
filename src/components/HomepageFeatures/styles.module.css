@@ -31,6 +31,10 @@
   transform: translateY(-4px);
   box-shadow: 0 4px 12px rgba(0, 119, 190, 0.15);
   border-color: var(--ifm-color-primary);
+  .featureEmoji {
+  transform: rotate(360deg) scale(1.2);;
+}
+
 }
 
 [data-theme='dark'] .featureCard:hover {
@@ -50,12 +54,8 @@
 .featureEmoji {
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: 1rem;
+  transition: transform 0.2s ease;
 }
-/* Custom button spacing */
-:global(.buttons > .button) {
-  margin: 0 0.5rem; /* horizontal gap */
-}
-
 
 
 /* Mobile responsive styles */
