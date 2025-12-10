@@ -1,0 +1,82 @@
+/**
+ * TextSelectionMenu Styles
+ */
+
+.menu {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+  z-index: 1001;
+  animation: menuAppear 0.2s ease-out;
+}
+
+@keyframes menuAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+.askButton {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:transform 0.2s, opacity 0.2s;
+}
+
+.askButton:hover {
+  opacity: 0.9;
+
+}
+.emoji {
+  display: inline-block;
+  transition: transform 0.2s ease; /* smooth rotation */
+}
+
+.askButton:hover .emoji {
+  transform: rotate(360deg) scale(1.2); /* rotate and scale */
+  transition: transform 0.2s ease;
+}
+
+.dismissButton {
+  padding: 8px 12px;
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dismissButton:hover {
+  background: #e0e0e0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .menu {
+    font-size: 13px;
+  }
+
+  .askButton,
+  .dismissButton {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}

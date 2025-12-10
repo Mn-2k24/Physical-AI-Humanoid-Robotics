@@ -1,0 +1,58 @@
+# Docker Compose for RAG Assistant Local Development
+# Orchestrates backend FastAPI and frontend Docusaurus services
+
+version: '3.8'
+
+services:
+  # Backend FastAPI service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
+      - QDRANT_ENDPOINT=${QDRANT_ENDPOINT}
+      - QDRANT_COLLECTION_NAME=${QDRANT_COLLECTION_NAME}
+      - NEON_CONNECTION_STRING=${NEON_CONNECTION_STRING}
+      - EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+      - ANSWER_MODEL_NAME=google/flan-t5-base
+      - API_CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - backend-models:/root/.cache/huggingface
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Frontend Docusaurus service
+  frontend:
+    image: node:20-alpine
+    container_name: rag-frontend
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm start -- --host 0.0.0.0"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  # Persist downloaded HuggingFace models
+  backend-models:
+    driver: local
+
+networks:
+  default:
+    name: rag-network

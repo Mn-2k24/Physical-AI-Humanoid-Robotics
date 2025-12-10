@@ -34,6 +34,59 @@ This is an **interactive educational book and documentation website** that teach
 
 ---
 
+## 🤖 RAG Assistant
+
+This book includes an **AI-powered RAG (Retrieval-Augmented Generation) assistant** that helps you explore the content interactively:
+
+### Features
+- **💬 Full-Book Search**: Ask questions about any topic covered in the book
+- **📍 Chapter-Scoped Queries**: Highlight text in any chapter and ask "Ask AI About This" for context-specific answers
+- **🔗 Source Citations**: Every answer includes clickable links to the exact book sections used
+- **🎯 Grounded Responses**: All answers are strictly based on book content (no hallucinations)
+- **📱 Mobile-Friendly**: Responsive chat interface works on desktop and mobile browsers
+
+### How It Works
+The RAG assistant uses:
+- **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2` for semantic search
+- **Answer Generation**: `google/flan-t5-base` for generating grounded responses
+- **Vector Database**: Qdrant Cloud for efficient similarity search
+- **Backend API**: FastAPI with 3 endpoints (`/ask`, `/ask-local`, `/track`)
+
+### Documentation
+- **Specification**: [specs/002-end-to-end-rag-assistant/spec.md](specs/002-end-to-end-rag-assistant/spec.md)
+- **Implementation Plan**: [specs/002-end-to-end-rag-assistant/plan.md](specs/002-end-to-end-rag-assistant/plan.md)
+- **Setup Guide**: [specs/002-end-to-end-rag-assistant/quickstart.md](specs/002-end-to-end-rag-assistant/quickstart.md)
+
+### Local Setup
+To run the RAG assistant locally:
+
+```bash
+# Backend setup
+cd backend
+python3.11 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your Qdrant and Neon credentials
+
+# Initialize database and ingest content
+python scripts/init_neon.py
+python scripts/verify_qdrant.py
+python scripts/ingest.py
+
+# Start backend API
+uvicorn src.main:app --host 0.0.0.0 --port 8000
+
+# In another terminal, start frontend
+npm start
+```
+
+See the [Backend README](backend/README.md) for detailed instructions.
+
+---
+
 ## 📚 Content Structure
 
 ### **Module 1: ROS 2 Middleware** (2-3 weeks)

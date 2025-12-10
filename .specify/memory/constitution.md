@@ -3,15 +3,23 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: Initial → 1.0.0
-Modified Principles: N/A (initial constitution)
-Added Sections: All sections (Core Principles, Focus Areas, Writing Standards, Structural Requirements, Technical Workflow, Constraints, Success Criteria, Versioning Rules, Review Process, Governance)
+Version Change: 1.0.0 → 2.0.0
+Modified Principles: None (existing principles preserved)
+Added Sections:
+  - New Principle VII: RAG-Powered Interactive Learning
+  - New Focus Area: Interactive AI chatbot integration
+  - New Technical Constraint: RAG infrastructure requirements
+  - New Success Criterion: Chatbot functionality validation
 Removed Sections: None
 Templates Updated:
-  ✅ plan-template.md - Constitution Check section aligns with accuracy, reproducibility, and citation principles
-  ✅ spec-template.md - User scenarios and requirements align with technical audience and clarity principles
-  ✅ tasks-template.md - Task structure supports spec-first workflow and independent testing requirements
-Follow-up TODOs: None - all placeholders resolved
+  ✅ plan-template.md - Constitution Check aligns with all principles including new RAG requirements
+  ✅ spec-template.md - User scenarios support interactive chatbot features
+  ✅ tasks-template.md - Task structure accommodates RAG backend and frontend integration tasks
+Follow-up TODOs:
+  - Implement RAG chatbot backend (FastAPI + OpenAI + Qdrant)
+  - Integrate chatbot UI into Docusaurus
+  - Set up Neon Postgres for analytics
+  - Create embedding pipeline for book content
 ==================
 -->
 
@@ -21,11 +29,12 @@ Follow-up TODOs: None - all placeholders resolved
 **Platform**: Docusaurus
 **Management**: Spec-Kit Plus
 **Authoring Tools**: Claude CLI / Claude Code
-**Publishing**: GitHub Pages
+**Publishing**: Vercel (primary), GitHub Pages
+**Interactive Features**: RAG-powered AI chatbot for content exploration
 
 ## Core Purpose
 
-To produce a publicly accessible, academically grounded, and technically accurate book that explains how AI systems can control humanoid robots in both simulated and real-world physical environments.
+To produce a publicly accessible, academically grounded, and technically accurate interactive book that explains how AI systems can control humanoid robots in both simulated and real-world physical environments, enhanced with an intelligent chatbot for personalized learning assistance.
 
 **Target Audience**: Students, researchers, and developers transitioning from AI theory to embodied intelligence practice.
 
@@ -41,6 +50,7 @@ The book covers the following domains:
 - Real-world deployment challenges
 - Safety, ethics, and engineering constraints
 - Open-source robotics ecosystems
+- Interactive learning through RAG-powered AI assistance
 
 ## Core Principles
 
@@ -111,6 +121,45 @@ The book covers the following domains:
 
 **Rationale**: Spec-first approach ensures systematic coverage, prevents scope creep, and enables progress tracking.
 
+### VII. RAG-Powered Interactive Learning
+
+**Rule**: The book MUST provide an intelligent, retrieval-augmented chatbot for content exploration.
+
+**Core Requirements**:
+- **Grounded Responses**: All chatbot answers MUST be sourced strictly from book content (no hallucinations)
+- **Dual Query Modes**: Support both full-book queries and user-selected-text queries
+- **Retrieval Pipeline**: OpenAI embeddings → Qdrant similarity search → rerank → answer generation
+- **Seamless Integration**: Chatbot MUST function directly within the Docusaurus UI using custom React components
+- **Text Selection Feature**: UI MUST support text selection → "Ask AI About This" action for contextual queries
+
+**Technical Standards**:
+- **Backend**: FastAPI with three endpoints maximum:
+  - `/ask` - full-book RAG queries
+  - `/ask-local` - selected-text only queries
+  - `/track` - conversation analytics to Neon Postgres
+- **Vector Database**: Qdrant Cloud Free Tier
+  - Collection name: `physical_ai_book`
+  - Minimum 1,000 text chunks embedded for full coverage
+  - Embedding dimension: 1536 (OpenAI standard)
+- **Storage**: Neon Serverless Postgres for logs, conversations, and analytics
+- **Performance**: Query latency < 3 seconds
+- **Security**: All API keys and environment variables stored server-side only (zero leakage to frontend)
+- **Reliability**: Backend MUST be stable under 500 requests/day (free-tier limits)
+
+**Data Management**:
+- Logging, embeddings, and metadata MUST follow strict schema in Neon Postgres
+- All responses MUST be traceable to source book sections used
+- Selected-text mode MUST ignore all unrelated content (strict context isolation)
+- Conversation analytics MUST be visible in Neon dashboard
+
+**Success Validation**:
+- Chatbot functions fully inside the Docusaurus book UI
+- Responses are accurate and verifiable against book content
+- End-to-end pipeline deployed and publicly accessible
+- Zero security vulnerabilities in API key management
+
+**Rationale**: Modern educational resources require interactive assistance. A RAG-powered chatbot enhances learning by providing instant, contextually relevant answers while ensuring accuracy through retrieval from verified book content. This transforms passive reading into active exploration without compromising technical accuracy.
+
 ## Writing Standards
 
 ### Required Quality Metrics
@@ -121,6 +170,7 @@ The book covers the following domains:
 - **Tutorial Sections**: Minimum 5 step-by-step tutorials
 - **Readability**: Flesch-Kincaid grade 11–14
 - **Format**: Markdown in Docusaurus
+- **Interactive Features**: RAG chatbot integrated and functional
 
 ### Citation Requirements
 
@@ -164,6 +214,7 @@ Each chapter MUST include:
 - References to relevant literature
 - Summary and key takeaways
 - Exercises or projects (where appropriate)
+- Chatbot-friendly content structure for effective RAG retrieval
 
 ## Technical Workflow
 
@@ -172,8 +223,14 @@ Each chapter MUST include:
 - **Docusaurus**: Documentation site and final book UI
 - **Spec-Kit Plus**: Project specification, section control, content governance
 - **Claude CLI / Claude Code**: AI-assisted writing, code generation, technical explanations
-- **GitHub Pages**: Hosting and continuous publishing
+- **Vercel**: Primary hosting with continuous deployment
+- **GitHub Pages**: Secondary hosting option
 - **Git**: Version control with clear commit messages
+- **RAG Infrastructure**:
+  - FastAPI backend for chatbot endpoints
+  - OpenAI API for embeddings and chat completion
+  - Qdrant Cloud for vector storage and similarity search
+  - Neon Postgres for analytics and conversation logs
 
 ### Development Rules
 
@@ -182,6 +239,7 @@ Each chapter MUST include:
 3. Claude-generated sections require manual technical review before merging
 4. Commit messages MUST indicate AI vs. human authorship
 5. All code examples MUST be tested before committing
+6. RAG chatbot changes MUST be tested for accuracy and security before deployment
 
 ### Workflow Steps
 
@@ -192,7 +250,8 @@ Each chapter MUST include:
 5. **Technical Review**: Human validation of technical accuracy
 6. **Citation Check**: Verify all claims are properly cited
 7. **Testing**: Run all code examples and simulations
-8. **Merge**: Commit to repository with appropriate messages
+8. **RAG Integration**: Ensure new content is embedded and retrievable via chatbot
+9. **Merge**: Commit to repository with appropriate messages
 
 ## Constraints
 
@@ -207,9 +266,16 @@ Each chapter MUST include:
 ### Technical Constraints
 
 - **Format**: Markdown only (Docusaurus-compatible)
-- **Deployment**: GitHub Pages with CI/CD
+- **Deployment**: Vercel (primary) and GitHub Pages (secondary)
 - **Licensing**: Open-source friendly (figures must be original or openly licensed)
 - **Accessibility**: Content must be readable without AI tools
+- **RAG Infrastructure**:
+  - Vector collection: `physical_ai_book` in Qdrant
+  - Minimum 1,000 text chunks embedded
+  - Embedding dimension: 1536
+  - Query latency: < 3 seconds
+  - Backend endpoints: Maximum 3 (`/ask`, `/ask-local`, `/track`)
+  - Environment variables: Server-side only (no client-side exposure)
 
 ### Quality Constraints
 
@@ -217,6 +283,8 @@ Each chapter MUST include:
 - **Citation Style**: IEEE or ACM (consistent throughout)
 - **Plagiarism**: 0% tolerance
 - **Technical Accuracy**: All claims must be verifiable
+- **Chatbot Accuracy**: All responses grounded in book content only
+- **Security**: Zero API key leakage in frontend
 
 ## Success Criteria
 
@@ -226,11 +294,18 @@ A successful book project MUST demonstrate:
 2. **Technical Accuracy**: Passes plagiarism and technical accuracy review
 3. **Practical Examples**: Contains real robotic examples (simulation or hardware)
 4. **Tutorial Content**: Provides at least 5 step-by-step tutorial sections
-5. **Automated Deployment**: Deploys automatically via GitHub Pages CI/CD
+5. **Automated Deployment**: Deploys automatically via Vercel with GitHub integration
 6. **Independent Readability**: Readable without Claude or AI tools
 7. **Citation Compliance**: Minimum 30 references, 50% peer-reviewed
 8. **Visual Content**: At least 20 diagrams/figures
 9. **Reproducibility**: All examples run using open-source tools
+10. **Interactive Chatbot**: RAG-powered chatbot fully functional within Docusaurus UI
+11. **Chatbot Accuracy**: All chatbot responses traceable to book sections
+12. **Dual Query Modes**: Both full-book and selected-text queries working
+13. **Analytics Dashboard**: Conversation logs visible in Neon Postgres dashboard
+14. **Security Compliance**: No API keys exposed in frontend
+15. **Performance Target**: Chatbot responses delivered in < 3 seconds
+16. **Free-Tier Stability**: Backend stable under 500 requests/day
 
 ## Versioning Rules
 
@@ -239,7 +314,9 @@ A successful book project MUST demonstrate:
 - **v1.0 (MVP)**: All major chapters drafted and navigable online
 - **v1.1**: Citations, case studies, and diagrams added
 - **v1.2**: Simulation code and reproducible experiments added
-- **v2.0**: Real-world hardware integration documented
+- **v2.0**: Real-world hardware integration documented + RAG chatbot integrated
+- **v2.1**: Enhanced chatbot features (conversation history, multi-turn context)
+- **v2.2**: Analytics dashboard and user feedback integration
 
 ### Content Versioning
 
@@ -269,7 +346,7 @@ A successful book project MUST demonstrate:
    - Readability assessment
 
 4. **Publish Stage**
-   - Push to GitHub Pages main branch
+   - Push to GitHub (triggers Vercel deployment)
    - Automated deployment via CI/CD
    - Version tagging
 
@@ -290,6 +367,8 @@ Each chapter MUST pass these checks before publication:
 - [ ] No plagiarism detected
 - [ ] Human technical review completed
 - [ ] Commit history shows authorship transparency
+- [ ] Content embedded in RAG vector database (for v2.0+)
+- [ ] Chatbot can accurately answer questions about the chapter (for v2.0+)
 
 ## Governance
 
@@ -336,10 +415,11 @@ Any violation of constitution principles MUST be:
 
 ## Constitution Versioning
 
-**Version**: 1.0.0
+**Version**: 2.0.0
 **Ratified**: 2025-12-04
-**Last Amended**: 2025-12-04
+**Last Amended**: 2025-12-09
 
 ### Version History
 
 - **1.0.0** (2025-12-04): Initial constitution established with complete governance framework for Physical AI & Humanoid Robotics book project
+- **2.0.0** (2025-12-09): MAJOR version bump - Added Principle VII (RAG-Powered Interactive Learning) with comprehensive chatbot requirements, infrastructure specifications, and security standards. This is a backward-incompatible change as it introduces mandatory interactive features and new technical infrastructure (FastAPI backend, Qdrant vector DB, Neon Postgres analytics) that fundamentally alter the project scope from static documentation to interactive learning platform.

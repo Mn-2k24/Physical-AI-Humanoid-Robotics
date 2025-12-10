@@ -35,6 +35,13 @@ const config: Config = {
     locales: ['en'],
   },
 
+  // Custom fields for RAG backend API
+  customFields: {
+    apiUrl: process.env.NODE_ENV === 'production'
+      ? 'https://your-render-app.onrender.com'  // Update with actual Render.com URL
+      : 'http://localhost:8000',
+  },
+
   presets: [
     [
       'classic',
