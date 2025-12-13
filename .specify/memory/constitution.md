@@ -3,23 +3,32 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.0.0 → 2.0.0
-Modified Principles: None (existing principles preserved)
+Version Change: 2.0.0 → 3.0.0
+Modified Principles:
+  - Expanded Principle VII with authentication requirements
 Added Sections:
-  - New Principle VII: RAG-Powered Interactive Learning
-  - New Focus Area: Interactive AI chatbot integration
-  - New Technical Constraint: RAG infrastructure requirements
-  - New Success Criterion: Chatbot functionality validation
+  - New Principle VIII: User Authentication & Personalization
+  - Authentication infrastructure using Better Auth
+  - Signup/Signin requirements with user background collection
+  - Frontend UI requirements for authentication flows
+  - Security and privacy requirements for user data
+  - Neon Postgres schema for user accounts and questionnaires
+Modified Sections:
+  - Technical constraints updated with Better Auth requirements
+  - Success criteria expanded with authentication validation
+  - RAG infrastructure now integrates with user authentication
 Removed Sections: None
 Templates Updated:
-  ✅ plan-template.md - Constitution Check aligns with all principles including new RAG requirements
-  ✅ spec-template.md - User scenarios support interactive chatbot features
-  ✅ tasks-template.md - Task structure accommodates RAG backend and frontend integration tasks
+  ✅ plan-template.md - Constitution Check aligns with all principles including authentication
+  ✅ spec-template.md - User scenarios support authenticated chatbot interactions
+  ✅ tasks-template.md - Task structure accommodates authentication implementation
 Follow-up TODOs:
-  - Implement RAG chatbot backend (FastAPI + OpenAI + Qdrant)
-  - Integrate chatbot UI into Docusaurus
-  - Set up Neon Postgres for analytics
-  - Create embedding pipeline for book content
+  - Implement Better Auth backend integration (FastAPI + Better Auth + Neon Postgres)
+  - Create Signup/Signin UI components
+  - Design user background questionnaire (software & hardware)
+  - Integrate authentication with RAG chatbot endpoints
+  - Set up session management and token-based auth
+  - Create Neon Postgres schema for user data
 ==================
 -->
 
@@ -159,6 +168,110 @@ The book covers the following domains:
 - Zero security vulnerabilities in API key management
 
 **Rationale**: Modern educational resources require interactive assistance. A RAG-powered chatbot enhances learning by providing instant, contextually relevant answers while ensuring accuracy through retrieval from verified book content. This transforms passive reading into active exploration without compromising technical accuracy.
+
+### VIII. User Authentication & Personalization
+
+**Rule**: The system MUST provide secure user authentication to enable personalized learning experiences and future content customization.
+
+**Core Requirements**:
+- **Authentication Provider**: ALL authentication MUST be implemented using **Better Auth** (https://www.better-auth.com) - custom authentication logic is prohibited
+- **Mandatory Frontend UI**: Full Signup and Signin UI components MUST be provided and integrated into Docusaurus
+- **User Background Collection**: During signup, the system MUST collect:
+  - **Software Background**: Programming languages, frameworks, experience level
+  - **Hardware Background**: CPU/GPU availability, robotics/AI hardware access
+- **Session Management**: Secure session-based or token-based authentication for protected endpoints
+- **Backend Validation**: All authenticated endpoints MUST validate auth state server-side
+
+**Signup Requirements**:
+- Full name, email, password (minimum 8 characters)
+- Software background questionnaire:
+  - Known programming languages (multi-select: Python, C++, JavaScript, Rust, Go, Java, Other)
+  - Frameworks experience (multi-select: ROS, ROS2, PyTorch, TensorFlow, Unity, Unreal, Other)
+  - Experience level (radio: Beginner, Intermediate, Advanced, Expert)
+- Hardware background questionnaire:
+  - Available hardware (multi-select: CPU only, NVIDIA GPU, AMD GPU, Apple Silicon, Jetson, Other)
+  - Robotics hardware access (multi-select: None, Simulation only, Educational robot kit, Research platform, Other)
+- All data stored in Neon Serverless Postgres with proper schema design
+
+**Signin Requirements**:
+- Email and password authentication
+- "Remember me" functionality for persistent sessions
+- Password reset capability
+- Secure token generation and validation
+
+**Frontend UI Requirements (Mandatory)**:
+- **Signup Page**:
+  - Clean, accessible form with validation
+  - Multi-step wizard for background questionnaires
+  - Real-time validation feedback
+  - Password strength indicator
+  - Terms of service acceptance
+- **Signin Page**:
+  - Email/password form
+  - "Remember me" checkbox
+  - "Forgot password" link
+  - Clear error messaging
+- **Integration**: Auth UI MUST be seamlessly integrated into Docusaurus navigation
+- **Responsive Design**: All auth forms MUST work on mobile, tablet, and desktop
+
+**Backend Architecture**:
+- **Better Auth Integration**: Use Better Auth SDK for FastAPI backend
+- **Database Schema**: Neon Postgres tables:
+  - `users` (id, email, hashed_password, full_name, created_at, updated_at)
+  - `user_profiles` (user_id, experience_level, created_at, updated_at)
+  - `user_software_background` (user_id, programming_languages, frameworks)
+  - `user_hardware_background` (user_id, available_hardware, robotics_hardware)
+  - `auth_sessions` (session_id, user_id, token, expires_at, created_at)
+- **Protected Endpoints**: Authentication required for:
+  - `/ask` - RAG queries (future: personalized based on user background)
+  - `/ask-local` - Selected-text queries
+  - `/track` - Conversation analytics
+
+**Security Requirements**:
+- Password hashing using industry-standard algorithms (bcrypt, Argon2)
+- HTTPS-only for all authentication endpoints
+- CSRF protection on all forms
+- Rate limiting on signup/signin endpoints (max 5 attempts per minute)
+- Secure session tokens with expiration
+- No plaintext passwords in logs or database
+- Environment variables for all secrets (JWT secret, database credentials)
+
+**Privacy Requirements**:
+- User background data MUST NOT be exposed to chatbot responses directly
+- User data MUST NOT be used for training or shared with third parties
+- Clear privacy policy displayed during signup
+- GDPR-compliant data handling (right to deletion, data export)
+- Audit logs for all authentication events in Neon Postgres
+
+**Future Personalization (Post-MVP)**:
+- Tailor chatbot responses based on user's programming language preference
+- Adjust code examples to match user's framework experience
+- Recommend hardware-appropriate simulation environments
+- Track learning progress and suggest next chapters
+
+**Frontend Exclusions (Explicitly NOT Required)**:
+- Chatbot UI implementation
+- Message rendering components
+- Streaming chat interface
+- Conversation history UI
+
+**Non-Negotiable Constraints**:
+- Better Auth MUST be used (no custom auth allowed)
+- Signup MUST collect software and hardware background
+- Frontend UI for auth MUST be provided and integrated
+- All user data MUST be stored in Neon Postgres
+- No authentication secrets exposed to frontend
+- No unprotected personal data in API responses
+
+**Success Validation**:
+- Users can sign up and sign in successfully
+- Background questionnaire data is captured and stored
+- Protected endpoints require valid authentication
+- Session management works across browser sessions
+- All forms are accessible and responsive
+- Zero security vulnerabilities in authentication flow
+
+**Rationale**: Personalized learning experiences significantly improve educational outcomes. By collecting user background during signup, the system can future-proof for adaptive content delivery while maintaining strict security and privacy standards. Better Auth provides production-ready authentication without reinventing security-critical infrastructure, allowing focus on educational features. The mandatory frontend UI ensures users can immediately interact with authentication without requiring external implementation.
 
 ## Writing Standards
 
