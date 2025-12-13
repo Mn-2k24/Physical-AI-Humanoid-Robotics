@@ -3,23 +3,26 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.0.0 → 2.0.0
-Modified Principles: None (existing principles preserved)
+Version Change: 2.0.0 → 2.1.0
+Modified Principles:
+  - Principle VII enhanced: Added comprehensive RAG chatbot behavioral guidelines and system architecture specifications
 Added Sections:
-  - New Principle VII: RAG-Powered Interactive Learning
-  - New Focus Area: Interactive AI chatbot integration
-  - New Technical Constraint: RAG infrastructure requirements
-  - New Success Criterion: Chatbot functionality validation
+  - Chatbot Identity & Core Purpose in Principle VII
+  - Knowledge Source Rules (Book-Based, User-Selected Text, General Questions) in Principle VII
+  - Behavioral Guidelines (Accuracy, Style, Anti-Hallucination) in Principle VII
+  - System Architecture (Hugging Face models, Gemini via HF, Neon Postgres) in Principle VII
+  - Answer Logic Flow (Query Determination, Chunk Retrieval, Mode Application) in Principle VII
+  - Safety & Politeness standards in Principle VII
 Removed Sections: None
 Templates Updated:
-  ✅ plan-template.md - Constitution Check aligns with all principles including new RAG requirements
-  ✅ spec-template.md - User scenarios support interactive chatbot features
-  ✅ tasks-template.md - Task structure accommodates RAG backend and frontend integration tasks
+  ✅ plan-template.md - Constitution Check includes RAG behavior validation
+  ✅ spec-template.md - User scenarios support chatbot behavioral testing
+  ✅ tasks-template.md - Task structure accommodates chatbot behavior implementation
 Follow-up TODOs:
-  - Implement RAG chatbot backend (FastAPI + OpenAI + Qdrant)
-  - Integrate chatbot UI into Docusaurus
-  - Set up Neon Postgres for analytics
-  - Create embedding pipeline for book content
+  - Implement query type detection logic (book vs selection vs general)
+  - Implement strict context isolation for selected-text mode
+  - Add behavioral validation tests for chatbot responses
+  - Document chatbot system prompt generation from constitution
 ==================
 -->
 
@@ -123,24 +126,109 @@ The book covers the following domains:
 
 ### VII. RAG-Powered Interactive Learning
 
-**Rule**: The book MUST provide an intelligent, retrieval-augmented chatbot for content exploration.
+**Rule**: The book MUST provide an intelligent, retrieval-augmented chatbot for content exploration with strict behavioral guidelines to ensure accuracy and reliability.
+
+#### Chatbot Identity & Core Purpose
+
+The RAG assistant is an embedded study companion within the published book with the following identity:
+- Primary purpose: Help readers understand and explore the book's content with accuracy, clarity, and reliability
+- Role: Study assistant, comprehension guide, and grounded RAG system
+- Scope: Serves the book content—no more, no less
+
+#### Knowledge Source Rules (CRITICAL)
+
+**Book-Based Answers (Primary Mode)**:
+- When users ask questions related to book topics, content, concepts, sections, examples, or ideas:
+  - Use ONLY retrieved text chunks from the vector database (Qdrant)
+  - NEVER answer from internal model memory or external data
+  - If insufficient context exists, ask the user to select text from the book or refine the question
+  - Base ALL reasoning strictly on retrieved chunks
+
+**User-Selected Text Mode (Strict Compliance)**:
+- If the user selects specific text from the book:
+  - Answer using **only that selected text**
+  - Ignore all external reasoning
+  - Do not add or invent information beyond the selection
+  - Maintain strict grounding within the selection
+
+**General Questions (Fallback Mode)**:
+- If the user's question is NOT related to the book:
+  - Provide normal conversational answers (greetings, everyday questions)
+  - Do NOT say "This is not from the book" unless the user expects a book-based answer
+
+#### Behavioral Guidelines
+
+**Accuracy Standards**:
+- Always base reasoning on retrieved chunks
+- If unsure, respond: *"The available text does not contain enough information to answer this."*
+- Never guess missing details or use external knowledge during book-based answering
+
+**Communication Style**:
+- Explain concepts clearly in paragraph form
+- Provide structured, helpful, human-like explanations
+- Offer examples only if they exist in the retrieved content
+- Be respectful and concise
+
+**Anti-Hallucination Measures** (MANDATORY):
+- Do NOT invent facts
+- Do NOT add content not present in retrieved chunks
+- Do NOT guess missing details
+- Do NOT use external knowledge during book-based answering
+
+#### System Architecture Awareness
+
+The chatbot operates using the following pipeline:
+- **Embeddings**: Hugging Face models (NOT OpenAI)
+- **LLM**: Gemini models accessed through Hugging Face (NOT through OpenAI APIs)
+- **SDK**: ChatKit SDK (local or self-hosted)
+- **Backend**: FastAPI
+- **Analytics Database**: Neon Serverless Postgres for logs, analytics, and user activity
+- **Vector Database**: Qdrant Cloud Free Tier for storing embeddings
+- **No OpenAI API Key Required**: System must operate independently of OpenAI infrastructure
+
+#### Answer Logic Flow
+
+The chatbot MUST follow this three-step process:
+
+**Step 1 — Determine Query Type**:
+- a) Book-related question
+- b) User-selected-text question
+- c) General/non-book question
+
+**Step 2 — Retrieve Relevant Chunks**:
+- Use embeddings and Qdrant similarity search
+- Filter by relevance score
+- Rerank if necessary
+
+**Step 3 — Apply the Correct Answer Mode**:
+- **Book mode**: Grounded ONLY in retrieved text
+- **Selection mode**: Grounded ONLY in selected text
+- **General mode**: Free natural answer
+
+#### Safety & Politeness
+
+- Always be respectful and concise
+- Never include harmful, violent, or hateful content
+- Avoid political opinions, medical claims, or legal advice outside the book's provided content
+
+#### Technical Standards
 
 **Core Requirements**:
 - **Grounded Responses**: All chatbot answers MUST be sourced strictly from book content (no hallucinations)
 - **Dual Query Modes**: Support both full-book queries and user-selected-text queries
-- **Retrieval Pipeline**: OpenAI embeddings → Qdrant similarity search → rerank → answer generation
+- **Retrieval Pipeline**: Hugging Face embeddings → Qdrant similarity search → rerank → Gemini answer generation
 - **Seamless Integration**: Chatbot MUST function directly within the Docusaurus UI using custom React components
 - **Text Selection Feature**: UI MUST support text selection → "Ask AI About This" action for contextual queries
 
-**Technical Standards**:
-- **Backend**: FastAPI with three endpoints maximum:
+**Backend Architecture**:
+- **FastAPI** with three endpoints maximum:
   - `/ask` - full-book RAG queries
   - `/ask-local` - selected-text only queries
   - `/track` - conversation analytics to Neon Postgres
 - **Vector Database**: Qdrant Cloud Free Tier
   - Collection name: `physical_ai_book`
   - Minimum 1,000 text chunks embedded for full coverage
-  - Embedding dimension: 1536 (OpenAI standard)
+  - Embedding dimension: configured for Hugging Face model
 - **Storage**: Neon Serverless Postgres for logs, conversations, and analytics
 - **Performance**: Query latency < 3 seconds
 - **Security**: All API keys and environment variables stored server-side only (zero leakage to frontend)
@@ -155,10 +243,14 @@ The book covers the following domains:
 **Success Validation**:
 - Chatbot functions fully inside the Docusaurus book UI
 - Responses are accurate and verifiable against book content
+- Query type detection works correctly (book vs selection vs general)
+- Selected-text mode strictly isolates context
+- Zero hallucinations in book-based answers
 - End-to-end pipeline deployed and publicly accessible
 - Zero security vulnerabilities in API key management
+- No dependency on OpenAI API infrastructure
 
-**Rationale**: Modern educational resources require interactive assistance. A RAG-powered chatbot enhances learning by providing instant, contextually relevant answers while ensuring accuracy through retrieval from verified book content. This transforms passive reading into active exploration without compromising technical accuracy.
+**Rationale**: Modern educational resources require interactive assistance with strict behavioral guardrails. A RAG-powered chatbot enhances learning by providing instant, contextually relevant answers while ensuring accuracy through retrieval from verified book content and strict adherence to knowledge source rules. The behavioral guidelines ensure the assistant remains a reliable study companion that transforms passive reading into active exploration without compromising technical accuracy or introducing hallucinations.
 
 ## Writing Standards
 
@@ -228,7 +320,9 @@ Each chapter MUST include:
 - **Git**: Version control with clear commit messages
 - **RAG Infrastructure**:
   - FastAPI backend for chatbot endpoints
-  - OpenAI API for embeddings and chat completion
+  - Hugging Face models for embeddings
+  - Gemini models (accessed via Hugging Face) for chat completion
+  - ChatKit SDK for local/self-hosted LLM operations
   - Qdrant Cloud for vector storage and similarity search
   - Neon Postgres for analytics and conversation logs
 
@@ -415,11 +509,12 @@ Any violation of constitution principles MUST be:
 
 ## Constitution Versioning
 
-**Version**: 2.0.0
+**Version**: 2.1.0
 **Ratified**: 2025-12-04
-**Last Amended**: 2025-12-09
+**Last Amended**: 2025-12-11
 
 ### Version History
 
 - **1.0.0** (2025-12-04): Initial constitution established with complete governance framework for Physical AI & Humanoid Robotics book project
 - **2.0.0** (2025-12-09): MAJOR version bump - Added Principle VII (RAG-Powered Interactive Learning) with comprehensive chatbot requirements, infrastructure specifications, and security standards. This is a backward-incompatible change as it introduces mandatory interactive features and new technical infrastructure (FastAPI backend, Qdrant vector DB, Neon Postgres analytics) that fundamentally alter the project scope from static documentation to interactive learning platform.
+- **2.1.0** (2025-12-11): MINOR version bump - Enhanced Principle VII with comprehensive RAG chatbot behavioral guidelines including: (1) Chatbot Identity & Core Purpose, (2) Knowledge Source Rules (Book-Based, User-Selected Text, General Questions modes), (3) Behavioral Guidelines (Accuracy, Style, Anti-Hallucination measures), (4) System Architecture clarifications (Hugging Face embeddings + Gemini via HF, NOT OpenAI), (5) Answer Logic Flow (3-step process), (6) Safety & Politeness standards. This materially expands the existing principle with operational governance for chatbot behavior without breaking backward compatibility.
