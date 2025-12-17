@@ -63,21 +63,25 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/social-card.png',
+    // Phase 9 US8: Dark/Light mode support with persistence
     colorMode: {
-      respectPrefersColorScheme: true,
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: true, // Respect system preference
     },
     navbar: {
       title: 'Physical AI & Humanoid Robotics',
       logo: {
         alt: 'Physical AI Logo',
         src: 'img/booklogo.svg',
+         
       },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Book',
+          label: 'Text-Book',
         },
         {
           type: 'dropdown',
@@ -90,16 +94,7 @@ const config: Config = {
             {label: 'Module 4: VLA', to: '/docs/module-4-vla'},
           ],
         },
-        {
-          href: 'https://github.com/Mn-2k24/Physical-AI-Humanoid-Robotics',
-          label: 'Code Repository',
-          position: 'right',
-        },
-        {
-          href: 'https://github.com/Mn-2k24/Physical-AI-Humanoid-Robotics',
-          label: 'GitHub',
-          position: 'right',
-        },
+       
       ],
     },
     footer: {

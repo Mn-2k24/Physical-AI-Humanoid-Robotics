@@ -4,17 +4,26 @@
  * Textarea for multi-line input, Enter to submit, Shift+Enter for new line
  */
 
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, KeyboardEvent, useEffect } from 'react';
 import styles from './styles.module.css';
 
 interface InputBoxProps {
   onSend: (message: string) => void;
   isLoading: boolean;
   disabled: boolean;
+  initialValue?: string;
+  inputRef?: React.RefObject<HTMLTextAreaElement>;
 }
 
-export default function InputBox({ onSend, isLoading, disabled }: InputBoxProps) {
-  const [input, setInput] = useState('');
+export default function InputBox({ onSend, isLoading, disabled, initialValue = '', inputRef }: InputBoxProps) {
+  const [input, setInput] = useState(initialValue);
+
+  // Update input when initialValue changes
+  useEffect(() => {
+    if (initialValue) {
+      setInput(initialValue);
+    }
+  }, [initialValue]);
 
   const handleSubmit = () => {
     if (input.trim() && !disabled) {
@@ -33,6 +42,7 @@ export default function InputBox({ onSend, isLoading, disabled }: InputBoxProps)
   return (
     <div className={styles.inputBox}>
       <textarea
+        ref={inputRef}
         className={styles.input}
         value={input}
         onChange={(e) => setInput(e.target.value)}

@@ -1,0 +1,258 @@
+/**
+ * Navbar Authentication Styles
+ * Purpose: Styles for NavbarAuth component
+ * Date: 2025-12-14
+ */
+
+.loading {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-600);
+  padding: 0 1rem;
+}
+
+.authButtons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btnSignin,
+.btnSignup {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.6s ease;
+  white-space: nowrap;
+}
+
+.btnSignin {
+  color: var(--ifm-font-color-base);
+  background: transparent;
+   border: 1px solid var(--ifm-color-primary);
+}
+
+.btnSignin:hover {
+  background: var(--ifm-color-primary);
+  color: white;
+  
+}
+
+.btnSignup {
+  color: var(--ifm-font-color-base);
+  background: transparent;
+  border: 1px solid var(--ifm-color-primary);
+}
+
+.btnSignup:hover {
+  background: var(--ifm-color-primary-dark);
+  color: white;
+ 
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--ifm-font-color-base);
+  transition: all 0.2s ease;
+}
+
+.userButton:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.userName {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 200px;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdownHeader {
+  padding: 0.75rem 1rem;
+  background: var(--ifm-color-emphasis-100);
+}
+
+.userEmail {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  margin-bottom: 0.25rem;
+}
+
+.userExperience {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--ifm-color-emphasis-200);
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dropdownItem:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.dropdownItem:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile responsive - T065 */
+
+/* Mobile: <768px */
+@media (max-width: 767px) {
+  .authButtons {
+    gap: 0.5rem;
+  }
+
+  .btnSignin,
+  .btnSignup {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    min-height: 44px; /* Touch target minimum */
+    min-width: 44px;
+  }
+
+  .userName {
+    max-width: 80px;
+    font-size: 0.8125rem;
+  }
+
+  .userButton {
+    padding: 0.625rem 0.875rem;
+    min-height: 44px; /* Touch target minimum */
+    font-size: 0.8125rem;
+  }
+
+  .dropdown {
+    min-width: 180px;
+    right: -10px; /* Offset for better mobile positioning */
+  }
+
+  .dropdownItem {
+    padding: 0.875rem 1rem;
+    min-height: 44px; /* Touch target minimum */
+    font-size: 0.875rem;
+  }
+  /* Mobile: <768px */
+  .authButtons,
+  .userMenu,
+  .loading {
+    display: none !important;
+  }
+}
+
+
+
+/* Tablet: 768px-1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .userName {
+    max-width: 120px;
+  }
+
+  .btnSignin,
+  .btnSignup {
+    min-height: 40px;
+  }
+
+  .userButton {
+    min-height: 40px;
+  }
+}
+
+/* Desktop: >1024px */
+@media (min-width: 1024px) {
+  .userName {
+    max-width: 150px;
+  }
+}
+
+/* Touch interaction support - T067 */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch devices */
+  .btnSignin,
+  .btnSignup,
+  .userButton,
+  .dropdownItem {
+    min-height: 44px; /* iOS HIG minimum tap target */
+    min-width: 44px;
+  }
+
+  /* Add touch feedback */
+  .btnSignin:active,
+  .btnSignup:active,
+  .userButton:active,
+  .dropdownItem:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+
+  /* Remove hover states on touch devices */
+  .btnSignin:hover,
+  .btnSignup:hover,
+  .userButton:hover,
+  .dropdownItem:hover {
+    background: initial;
+  }
+
+  .btnSignin:active {
+    background: var(--ifm-color-emphasis-100);
+  }
+
+  .btnSignup:active {
+    background: var(--ifm-color-primary-dark);
+  }
+
+  .userButton:active {
+    background: var(--ifm-color-emphasis-100);
+  }
+
+  .dropdownItem:active {
+    background: var(--ifm-color-emphasis-100);
+  }
+}

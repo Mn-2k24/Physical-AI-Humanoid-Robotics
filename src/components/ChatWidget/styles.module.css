@@ -2,7 +2,7 @@
  * ChatWidget Styles
  */
 
-/* Floating chat button */
+/* Floating chat button - Phase 9 US7: Always visible, high z-index */
 .chatButton {
   position: fixed;
   bottom: 24px;
@@ -16,8 +16,12 @@
   font-size: 24px;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 9998; /* High z-index to ensure visibility on all pages */
   transition: transform 0.2s, box-shadow 0.2s;
+  /* Ensure button is always visible */
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .chatButton:hover {
@@ -26,10 +30,29 @@
   transition: transform 0.2s ease, box-shadow 0.2s;
 }
 
-
-
 .chatButton:active {
   transform: scale(0.95);
+}
+
+/* Mobile - ensure consistent behavior */
+@media (max-width: 768px) {
+  .chatButton {
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+    /* Ensure button stays above mobile UI elements */
+    z-index: 9998;
+  }
+}
+
+/* Touch devices - larger tap target */
+@media (hover: none) and (pointer: coarse) {
+  .chatButton {
+    min-width: 56px;
+    min-height: 56px;
+  }
 }
 
 /* Backdrop */
@@ -313,4 +336,116 @@
 :global(.highlight-flash) {
   background: rgba(255, 235, 59, 0.5);
   transition: background 2s ease-out;
+}
+
+/* Mode indicators */
+.modeIndicatorGlobal,
+.modeIndicatorLocal {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modeIndicatorGlobal {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.modeIndicatorLocal {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.modeIndicatorGlobal svg,
+.modeIndicatorLocal svg {
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   Phase 9 US8: Dark Mode Support for ChatPanel
+   ============================================================================ */
+
+[data-theme='dark'] .chatPanel {
+  background: var(--ifm-background-surface-color);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .emptyState {
+  color: var(--ifm-color-emphasis-600);
+}
+
+[data-theme='dark'] .message.user .bubble {
+  background: var(--ifm-color-primary-darker);
+  color: white;
+}
+
+[data-theme='dark'] .message.assistant .bubble {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+}
+
+[data-theme='dark'] .errorBanner {
+  background: var(--ifm-color-danger-contrast-background);
+  border-bottom-color: var(--ifm-color-danger-dark);
+  color: var(--ifm-color-danger);
+}
+
+[data-theme='dark'] .errorBanner button {
+  color: var(--ifm-color-danger);
+}
+
+[data-theme='dark'] .input {
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-font-color-base);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .input:focus {
+  border-color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .input::placeholder {
+  color: var(--ifm-color-emphasis-600);
+}
+
+[data-theme='dark'] .sendButton:not(:disabled) {
+  background: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .sendButton:not(:disabled):hover {
+  background: var(--ifm-color-primary-dark);
+}
+
+[data-theme='dark'] .modeIndicatorGlobal {
+  background: var(--ifm-color-primary-contrast-background);
+  color: var(--ifm-color-primary-light);
+}
+
+[data-theme='dark'] .modeIndicatorLocal {
+  background: var(--ifm-color-warning-contrast-background);
+  color: var(--ifm-color-warning-light);
+}
+
+[data-theme='dark'] .loadingDots span {
+  background: var(--ifm-color-emphasis-600);
+}
+
+[data-theme='dark'] .sources {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .sourcesHeader {
+  color: var(--ifm-color-emphasis-800);
+}
+
+[data-theme='dark'] .sourceLink {
+  color: var(--ifm-color-primary-light);
+}
+
+[data-theme='dark'] .sourceLink:hover {
+  color: var(--ifm-color-primary);
 }

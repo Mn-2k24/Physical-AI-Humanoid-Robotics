@@ -14,8 +14,9 @@ export default function ChatWidget() {
 
   return (
     <>
-      <ChatButton onClick={togglePanel} isOpen={isOpen} />
-      <ChatPanel isOpen={isOpen} onClose={togglePanel} />
+    {!isOpen && <ChatButton onClick={togglePanel} isOpen={isOpen} />}
+                <ChatPanel isOpen={isOpen} onClose={togglePanel} />
+
     </>
   );
 }

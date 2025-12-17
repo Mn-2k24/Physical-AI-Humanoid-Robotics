@@ -1,0 +1,344 @@
+{
+  "chapters": [
+    {
+      "chapter_id": "ch-001",
+      "title": "Introduction to Physical AI",
+      "difficulty": "Beginner",
+      "languages": ["Python"],
+      "frameworks": [],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": [],
+      "tags": ["introduction", "overview", "fundamentals"]
+    },
+    {
+      "chapter_id": "ch-002",
+      "title": "Setting Up Your Development Environment",
+      "difficulty": "Beginner",
+      "languages": ["Python"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-001"],
+      "tags": ["setup", "installation", "environment"]
+    },
+    {
+      "chapter_id": "ch-003",
+      "title": "Python Fundamentals for Robotics",
+      "difficulty": "Beginner",
+      "languages": ["Python"],
+      "frameworks": [],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-002"],
+      "tags": ["python", "programming", "basics"]
+    },
+    {
+      "chapter_id": "ch-004",
+      "title": "Introduction to ROS 2",
+      "difficulty": "Intermediate",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-003"],
+      "tags": ["ros2", "robotics", "middleware"]
+    },
+    {
+      "chapter_id": "ch-005",
+      "title": "Sensor Integration Basics",
+      "difficulty": "Intermediate",
+      "languages": ["Python"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)", "Camera/Vision Sensors", "IMU/Gyroscope"],
+      "prerequisite_chapters": ["ch-004"],
+      "tags": ["sensors", "hardware", "integration"]
+    },
+    {
+      "chapter_id": "ch-006",
+      "title": "Computer Vision with OpenCV",
+      "difficulty": "Intermediate",
+      "languages": ["Python", "C++"],
+      "frameworks": ["OpenCV", "ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)", "Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-005"],
+      "tags": ["vision", "opencv", "image-processing"]
+    },
+    {
+      "chapter_id": "ch-007",
+      "title": "GPU-Accelerated Computer Vision",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["OpenCV", "TensorFlow"],
+      "hardware_requirements": ["NVIDIA GPU", "Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-006"],
+      "tags": ["gpu", "acceleration", "vision", "performance"]
+    },
+    {
+      "chapter_id": "ch-008",
+      "title": "Deep Learning Fundamentals",
+      "difficulty": "Intermediate",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch"],
+      "hardware_requirements": ["CPU (x86/ARM)", "NVIDIA GPU"],
+      "prerequisite_chapters": ["ch-003"],
+      "tags": ["deep-learning", "neural-networks", "ai"]
+    },
+    {
+      "chapter_id": "ch-009",
+      "title": "Object Detection for Robotics",
+      "difficulty": "Advanced",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch", "OpenCV"],
+      "hardware_requirements": ["NVIDIA GPU", "Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-007", "ch-008"],
+      "tags": ["detection", "vision", "deep-learning"]
+    },
+    {
+      "chapter_id": "ch-010",
+      "title": "Motion Control Basics",
+      "difficulty": "Intermediate",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)", "Servo Motors", "Stepper Motors"],
+      "prerequisite_chapters": ["ch-004"],
+      "tags": ["motion", "control", "actuators"]
+    },
+    {
+      "chapter_id": "ch-011",
+      "title": "Arduino Integration for Robotics",
+      "difficulty": "Beginner",
+      "languages": ["C++", "Python"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["Arduino", "Servo Motors"],
+      "prerequisite_chapters": ["ch-010"],
+      "tags": ["arduino", "microcontroller", "embedded"]
+    },
+    {
+      "chapter_id": "ch-012",
+      "title": "ESP32 for IoT Robotics",
+      "difficulty": "Intermediate",
+      "languages": ["C++", "Python"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["ESP32/ESP8266", "IMU/Gyroscope"],
+      "prerequisite_chapters": ["ch-011"],
+      "tags": ["esp32", "iot", "wireless"]
+    },
+    {
+      "chapter_id": "ch-013",
+      "title": "Raspberry Pi for Physical AI",
+      "difficulty": "Intermediate",
+      "languages": ["Python"],
+      "frameworks": ["ROS2", "OpenCV"],
+      "hardware_requirements": ["Raspberry Pi", "Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-004"],
+      "tags": ["raspberry-pi", "embedded-linux", "edge-computing"]
+    },
+    {
+      "chapter_id": "ch-014",
+      "title": "NVIDIA Jetson for Edge AI",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["TensorFlow", "PyTorch", "ROS2"],
+      "hardware_requirements": ["NVIDIA Jetson", "Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-008", "ch-013"],
+      "tags": ["jetson", "edge-ai", "gpu-embedded"]
+    },
+    {
+      "chapter_id": "ch-015",
+      "title": "SLAM: Simultaneous Localization and Mapping",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["LIDAR", "Camera/Vision Sensors", "IMU/Gyroscope"],
+      "prerequisite_chapters": ["ch-005", "ch-006"],
+      "tags": ["slam", "localization", "mapping"]
+    },
+    {
+      "chapter_id": "ch-016",
+      "title": "Path Planning and Navigation",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["LIDAR", "Ultrasonic Sensors"],
+      "prerequisite_chapters": ["ch-015"],
+      "tags": ["navigation", "path-planning", "autonomy"]
+    },
+    {
+      "chapter_id": "ch-017",
+      "title": "Reinforcement Learning for Robotics",
+      "difficulty": "Expert",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch"],
+      "hardware_requirements": ["NVIDIA GPU"],
+      "prerequisite_chapters": ["ch-008"],
+      "tags": ["reinforcement-learning", "ai", "training"]
+    },
+    {
+      "chapter_id": "ch-018",
+      "title": "Sim-to-Real Transfer Learning",
+      "difficulty": "Expert",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch", "ROS2"],
+      "hardware_requirements": ["NVIDIA GPU"],
+      "prerequisite_chapters": ["ch-017"],
+      "tags": ["simulation", "transfer-learning", "training"]
+    },
+    {
+      "chapter_id": "ch-019",
+      "title": "Humanoid Robot Kinematics",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["Servo Motors", "Stepper Motors"],
+      "prerequisite_chapters": ["ch-010"],
+      "tags": ["kinematics", "humanoid", "dynamics"]
+    },
+    {
+      "chapter_id": "ch-020",
+      "title": "Grasping and Manipulation",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2", "OpenCV"],
+      "hardware_requirements": ["Servo Motors", "Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-019", "ch-009"],
+      "tags": ["manipulation", "grasping", "dexterity"]
+    },
+    {
+      "chapter_id": "ch-021",
+      "title": "Speech Recognition and NLP",
+      "difficulty": "Intermediate",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-008"],
+      "tags": ["nlp", "speech", "voice"]
+    },
+    {
+      "chapter_id": "ch-022",
+      "title": "Multi-Robot Coordination",
+      "difficulty": "Expert",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-016"],
+      "tags": ["multi-robot", "coordination", "swarm"]
+    },
+    {
+      "chapter_id": "ch-023",
+      "title": "Safety and Collision Avoidance",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["LIDAR", "Ultrasonic Sensors"],
+      "prerequisite_chapters": ["ch-016"],
+      "tags": ["safety", "collision-avoidance", "planning"]
+    },
+    {
+      "chapter_id": "ch-024",
+      "title": "Real-Time Operating Systems for Robotics",
+      "difficulty": "Advanced",
+      "languages": ["C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-004"],
+      "tags": ["rtos", "real-time", "operating-systems"]
+    },
+    {
+      "chapter_id": "ch-025",
+      "title": "Cloud Robotics and Edge Computing",
+      "difficulty": "Advanced",
+      "languages": ["Python"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-004"],
+      "tags": ["cloud", "edge-computing", "distributed"]
+    },
+    {
+      "chapter_id": "ch-026",
+      "title": "Dataset Collection and Labeling",
+      "difficulty": "Intermediate",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch"],
+      "hardware_requirements": ["Camera/Vision Sensors"],
+      "prerequisite_chapters": ["ch-008"],
+      "tags": ["data", "labeling", "datasets"]
+    },
+    {
+      "chapter_id": "ch-027",
+      "title": "Model Optimization for Edge Devices",
+      "difficulty": "Advanced",
+      "languages": ["Python"],
+      "frameworks": ["TensorFlow", "PyTorch"],
+      "hardware_requirements": ["NVIDIA Jetson", "Raspberry Pi"],
+      "prerequisite_chapters": ["ch-014"],
+      "tags": ["optimization", "edge", "quantization"]
+    },
+    {
+      "chapter_id": "ch-028",
+      "title": "Power Management for Mobile Robots",
+      "difficulty": "Intermediate",
+      "languages": ["Python", "C++"],
+      "frameworks": [],
+      "hardware_requirements": ["Raspberry Pi", "Arduino"],
+      "prerequisite_chapters": ["ch-011", "ch-013"],
+      "tags": ["power", "battery", "energy"]
+    },
+    {
+      "chapter_id": "ch-029",
+      "title": "Testing and Debugging Robotic Systems",
+      "difficulty": "Intermediate",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-004"],
+      "tags": ["testing", "debugging", "quality"]
+    },
+    {
+      "chapter_id": "ch-030",
+      "title": "Deployment and Production",
+      "difficulty": "Advanced",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2"],
+      "hardware_requirements": ["CPU (x86/ARM)"],
+      "prerequisite_chapters": ["ch-029"],
+      "tags": ["deployment", "production", "ci-cd"]
+    },
+    {
+      "chapter_id": "ch-031",
+      "title": "Ethics and Safety in Physical AI",
+      "difficulty": "Beginner",
+      "languages": [],
+      "frameworks": [],
+      "hardware_requirements": [],
+      "prerequisite_chapters": [],
+      "tags": ["ethics", "safety", "responsibility"]
+    },
+    {
+      "chapter_id": "ch-032",
+      "title": "Case Study: Autonomous Delivery Robot",
+      "difficulty": "Advanced",
+      "languages": ["Python"],
+      "frameworks": ["ROS2", "TensorFlow"],
+      "hardware_requirements": ["LIDAR", "Camera/Vision Sensors", "NVIDIA GPU"],
+      "prerequisite_chapters": ["ch-016", "ch-009"],
+      "tags": ["case-study", "delivery", "autonomous"]
+    },
+    {
+      "chapter_id": "ch-033",
+      "title": "Case Study: Humanoid Service Robot",
+      "difficulty": "Expert",
+      "languages": ["Python", "C++"],
+      "frameworks": ["ROS2", "TensorFlow", "PyTorch"],
+      "hardware_requirements": ["Servo Motors", "Camera/Vision Sensors", "NVIDIA GPU"],
+      "prerequisite_chapters": ["ch-020", "ch-021"],
+      "tags": ["case-study", "humanoid", "service-robot"]
+    },
+    {
+      "chapter_id": "ch-034",
+      "title": "Future Trends in Physical AI",
+      "difficulty": "Intermediate",
+      "languages": [],
+      "frameworks": [],
+      "hardware_requirements": [],
+      "prerequisite_chapters": ["ch-001"],
+      "tags": ["future", "trends", "research"]
+    }
+  ]
+}

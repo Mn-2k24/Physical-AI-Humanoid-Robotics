@@ -21,6 +21,7 @@ export default function ChatButton({ onClick, isOpen }: ChatButtonProps) {
       title={isOpen ? 'Close chat' : 'Ask AI about the book'}
     >
       {isOpen ? '✕' : '💬'}
+      
     </button>
   );
 }

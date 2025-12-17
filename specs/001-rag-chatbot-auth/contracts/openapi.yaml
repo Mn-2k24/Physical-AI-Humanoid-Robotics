@@ -1,0 +1,804 @@
+openapi: 3.0.3
+info:
+  title: Physical AI & Humanoid Robotics RAG Chatbot API
+  description: Backend API for authenticated RAG chatbot with conversation history, recommendations, and reading progress tracking
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@physical-ai-book.com
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.physical-ai-book.com
+    description: Production server (Hugging Face Spaces)
+
+tags:
+  - name: Authentication
+    description: User signup, signin, and session management
+  - name: Chat
+    description: RAG chatbot queries (global and local modes)
+  - name: Conversations
+    description: Conversation history management
+  - name: Recommendations
+    description: Personalized chapter recommendations
+  - name: Progress
+    description: Reading progress tracking
+  - name: Internal
+    description: Internal/admin endpoints
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Authentication Endpoints
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Create new user account
+      description: Register a new user with email, password, and background questionnaire
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - full_name
+                - experience_level
+                - programming_languages
+                - frameworks
+                - available_hardware
+                - robotics_hardware
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  minLength: 8
+                  example: SecurePass123
+                full_name:
+                  type: string
+                  minLength: 2
+                  example: John Doe
+                experience_level:
+                  type: string
+                  enum: [Beginner, Intermediate, Advanced, Expert]
+                  example: Intermediate
+                programming_languages:
+                  type: array
+                  items:
+                    type: string
+                    enum: [Python, "C++", JavaScript, Rust, Go, Java, MATLAB, Julia, Other]
+                  minItems: 1
+                  example: [Python, "C++"]
+                frameworks:
+                  type: array
+                  items:
+                    type: string
+                    enum: [ROS, "ROS 2", PyTorch, TensorFlow, Unity, "Unreal Engine", Gazebo, Mujoco, "Isaac Sim", Other]
+                  example: ["ROS 2", PyTorch]
+                available_hardware:
+                  type: array
+                  items:
+                    type: string
+                    enum: ["CPU only", "NVIDIA GPU", "AMD GPU", "Apple Silicon (M1/M2)", "NVIDIA Jetson", "Google TPU", Other]
+                  example: ["NVIDIA GPU"]
+                robotics_hardware:
+                  type: array
+                  items:
+                    type: string
+                    enum: ["None (simulation only)", "Educational robot kit", "Research robotic arm", "Mobile robot", "Humanoid robot", "Custom hardware", Other]
+                  example: ["None (simulation only)"]
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (max 5 attempts per minute)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/signin:
+    post:
+      tags:
+        - Authentication
+      summary: Sign in existing user
+      description: Authenticate user with email and password, returns session token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  example: SecurePass123
+                remember_me:
+                  type: boolean
+                  default: false
+                  description: Extend session expiration to 7 days
+      responses:
+        '200':
+          description: Signin successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (max 5 attempts per minute)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/signout:
+    post:
+      tags:
+        - Authentication
+      summary: Sign out current user
+      description: Invalidate current session token
+      responses:
+        '200':
+          description: Signout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signout successful
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user profile
+      description: Retrieve authenticated user's profile and background information
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Chat Endpoints
+  /chat/global:
+    post:
+      tags:
+        - Chat
+      summary: Ask question about book (global search)
+      description: Query across all book chapters using RAG retrieval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  minLength: 3
+                  example: What is ROS 2 and how does it differ from ROS 1?
+                conversation_id:
+                  type: string
+                  format: uuid
+                  description: Optional conversation ID for multi-turn context
+      responses:
+        '200':
+          description: Answer generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          description: Daily quota exceeded (1200 requests/day)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat/local:
+    post:
+      tags:
+        - Chat
+      summary: Ask question about selected text
+      description: Query using only user-selected text as context (strict isolation)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+                - file_path
+                - chunk_indices
+              properties:
+                query:
+                  type: string
+                  minLength: 3
+                  example: What simulation capabilities are mentioned here?
+                file_path:
+                  type: string
+                  example: docs/module-2-simulation/isaac-sim.md
+                chunk_indices:
+                  type: array
+                  items:
+                    type: integer
+                  minItems: 1
+                  example: [0, 1, 2]
+                conversation_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Answer generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Invalid query or selection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Conversation History Endpoints
+  /chat/history:
+    get:
+      tags:
+        - Conversations
+      summary: List user's conversations
+      description: Retrieve paginated list of user's conversation threads
+      parameters:
+        - name: skip
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: archived
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Conversations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Conversation'
+                  total:
+                    type: integer
+                  skip:
+                    type: integer
+                  limit:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /chat/history/{conversation_id}:
+    get:
+      tags:
+        - Conversations
+      summary: Get conversation details
+      description: Retrieve full conversation with all messages
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Conversation retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationDetail'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Conversations
+      summary: Delete conversation
+      description: Permanently delete conversation and all messages
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Conversation deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat/new:
+    post:
+      tags:
+        - Conversations
+      summary: Start new conversation
+      description: Create a new conversation thread
+      responses:
+        '201':
+          description: Conversation created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversation_id:
+                    type: string
+                    format: uuid
+                  created_at:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Recommendation Endpoints
+  /recommendations:
+    get:
+      tags:
+        - Recommendations
+      summary: Get personalized chapter recommendations
+      description: Retrieve top 5 recommended chapters based on user background and progress
+      responses:
+        '200':
+          description: Recommendations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recommendations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recommendation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /recommendations/{recommendation_id}/dismiss:
+    put:
+      tags:
+        - Recommendations
+      summary: Dismiss recommendation
+      description: Mark recommendation as dismissed (will not show again)
+      parameters:
+        - name: recommendation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Recommendation dismissed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Recommendation dismissed
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Recommendation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Progress Endpoints
+  /progress:
+    get:
+      tags:
+        - Progress
+      summary: Get reading progress
+      description: Retrieve user's progress across all chapters
+      responses:
+        '200':
+          description: Progress retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  progress:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReadingProgress'
+                  total_chapters:
+                    type: integer
+                  completed_chapters:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - Progress
+      summary: Update reading progress
+      description: Update progress for specific chapter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - chapter_id
+                - completion_percentage
+              properties:
+                chapter_id:
+                  type: string
+                  example: module-1-ros2/introduction
+                completion_percentage:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  example: 75
+                time_spent_seconds:
+                  type: integer
+                  minimum: 0
+                  example: 120
+      responses:
+        '200':
+          description: Progress updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadingProgress'
+        '400':
+          description: Invalid progress data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Internal Endpoints
+  /ingest:
+    post:
+      tags:
+        - Internal
+      summary: Ingest book chapters into Qdrant
+      description: Admin-only endpoint to embed /docs chapters
+      security:
+        - adminAuth: []
+      responses:
+        '202':
+          description: Ingestion started (async)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ingestion started
+                  total_chunks:
+                    type: integer
+                  estimated_time_minutes:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Forbidden (admin only)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      tags:
+        - Internal
+      summary: Health check
+      description: Check API and dependency health
+      security: []
+      responses:
+        '200':
+          description: System healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy, degraded]
+                  checks:
+                    type: object
+                    properties:
+                      qdrant:
+                        type: boolean
+                      neon:
+                        type: boolean
+                      gemini:
+                        type: boolean
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    adminAuth:
+      type: apiKey
+      in: header
+      name: X-Admin-Key
+
+  responses:
+    UnauthorizedError:
+      description: Authentication required or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserProfile'
+        token:
+          type: string
+          description: JWT session token (also set as HTTP-only cookie)
+        expires_at:
+          type: string
+          format: date-time
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+        experience_level:
+          type: string
+          enum: [Beginner, Intermediate, Advanced, Expert]
+        programming_languages:
+          type: array
+          items:
+            type: string
+        frameworks:
+          type: array
+          items:
+            type: string
+        available_hardware:
+          type: array
+          items:
+            type: string
+        robotics_hardware:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ChatResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Generated answer from book content
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        conversation_id:
+          type: string
+          format: uuid
+          description: Conversation ID for multi-turn context
+        query_mode:
+          type: string
+          enum: [global, local]
+
+    Source:
+      type: object
+      properties:
+        file_path:
+          type: string
+        section_heading:
+          type: string
+        chunk_index:
+          type: integer
+        similarity_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        archived:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        message_count:
+          type: integer
+
+    ConversationDetail:
+      allOf:
+        - $ref: '#/components/schemas/Conversation'
+        - type: object
+          properties:
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/ChatMessage'
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        query_text:
+          type: string
+        answer_text:
+          type: string
+        query_mode:
+          type: string
+          enum: [global, local]
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        created_at:
+          type: string
+          format: date-time
+
+    Recommendation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        chapter_id:
+          type: string
+        chapter_title:
+          type: string
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        reason:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ReadingProgress:
+      type: object
+      properties:
+        chapter_id:
+          type: string
+        chapter_title:
+          type: string
+        completion_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        time_spent_seconds:
+          type: integer
+        last_accessed:
+          type: string
+          format: date-time
+        completed:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: object
+          additionalProperties: true

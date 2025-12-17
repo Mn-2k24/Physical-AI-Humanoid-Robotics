@@ -233,6 +233,8 @@ blockquote {
   .featureCard {
     padding: 1.25rem;
   }
+  
+  
 
   /* Ensure 2-column grid on tablet */
   .col.col--6 {

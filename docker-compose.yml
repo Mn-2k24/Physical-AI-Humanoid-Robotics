@@ -1,58 +1,186 @@
-# Docker Compose for RAG Assistant Local Development
-# Orchestrates backend FastAPI and frontend Docusaurus services
+# ============================================================================
+# Docker Compose Configuration
+# RAG Chatbot & Authentication System
+# ============================================================================
+# Services:
+#   - backend: FastAPI backend (Python 3.11)
+#   - frontend: Docusaurus frontend served by nginx
+# ============================================================================
 
 version: '3.8'
 
 services:
-  # Backend FastAPI service
+  # ========================================================================
+  # Backend Service (FastAPI)
+  # ========================================================================
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: rag-backend
+    container_name: rag-chatbot-backend
+    restart: unless-stopped
+
+    # Port mapping: host:container
     ports:
       - "8000:8000"
+
+    # Environment variables
+    # Override these in .env file or pass via docker-compose up
     environment:
+      # Backend Configuration
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8000
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+
+      # API Keys
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+
+      # Qdrant Configuration
       - QDRANT_API_KEY=${QDRANT_API_KEY}
       - QDRANT_ENDPOINT=${QDRANT_ENDPOINT}
-      - QDRANT_COLLECTION_NAME=${QDRANT_COLLECTION_NAME}
+      - QDRANT_COLLECTION=${QDRANT_COLLECTION:-physical_ai_book}
+
+      # Database Configuration
       - NEON_CONNECTION_STRING=${NEON_CONNECTION_STRING}
-      - EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
-      - ANSWER_MODEL_NAME=google/flan-t5-base
-      - API_CORS_ORIGINS=http://localhost:3000
-    volumes:
-      - ./backend:/app
-      - backend-models:/root/.cache/huggingface
-    restart: unless-stopped
+
+      # Authentication
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:8000/auth}
+
+      # CORS Configuration
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost,http://localhost:3000}
+
+      # Security
+      - CSRF_SECRET=${CSRF_SECRET}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-5}
+      - SESSION_EXPIRATION_HOURS=${SESSION_EXPIRATION_HOURS:-24}
+
+      # Application
+      - MAX_CONVERSATION_MESSAGES=${MAX_CONVERSATION_MESSAGES:-10}
+      - RECOMMENDATION_LIMIT=${RECOMMENDATION_LIMIT:-5}
+
+    # Health check
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 40s
 
-  # Frontend Docusaurus service
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Networks
+    networks:
+      - app-network
+
+  # ========================================================================
+  # Frontend Service (Docusaurus + Nginx)
+  # ========================================================================
   frontend:
-    image: node:20-alpine
-    container_name: rag-frontend
-    working_dir: /app
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: sh -c "npm install && npm start -- --host 0.0.0.0"
-    depends_on:
-      - backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    container_name: rag-chatbot-frontend
     restart: unless-stopped
 
-volumes:
-  # Persist downloaded HuggingFace models
-  backend-models:
-    driver: local
+    # Port mapping: host:container
+    ports:
+      - "80:80"
 
+    # Depends on backend being healthy
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    # Environment variables
+    environment:
+      - BACKEND_URL=${BACKEND_URL:-http://backend:8000}
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Networks
+    networks:
+      - app-network
+
+# ============================================================================
+# Networks
+# ============================================================================
 networks:
-  default:
-    name: rag-network
+  app-network:
+    driver: bridge
+    name: rag-chatbot-network
+
+# ============================================================================
+# Usage Instructions
+# ============================================================================
+#
+# 1. Create .env file in project root with required environment variables
+#
+# 2. Build and start services:
+#    docker-compose up -d --build
+#
+# 3. View logs:
+#    docker-compose logs -f
+#    docker-compose logs -f backend
+#    docker-compose logs -f frontend
+#
+# 4. Stop services:
+#    docker-compose down
+#
+# 5. Stop and remove volumes:
+#    docker-compose down -v
+#
+# 6. Restart services:
+#    docker-compose restart
+#
+# 7. Check health status:
+#    docker-compose ps
+#
+# 8. Access services:
+#    Frontend: http://localhost
+#    Backend: http://localhost:8000
+#    Backend API Docs: http://localhost:8000/docs
+#
+# ============================================================================

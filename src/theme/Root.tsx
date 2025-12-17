@@ -6,7 +6,8 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import ChatWidget from '../components/ChatWidget';
-import TextSelectionMenu from '../components/TextSelectionMenu';
+import TextSelectionMenu from '../components/TextSelectionMenu/index';
+import { AuthProvider } from '../components/auth/AuthProvider';
 import type { Message } from '../components/ChatWidget/MessageList';
 
 interface ChatContextType {
@@ -14,6 +15,7 @@ interface ChatContextType {
   messages: Message[];
   isLoading: boolean;
   error: string | null;
+  queryMode: 'global' | 'local';
   togglePanel: () => void;
   sendMessage: (message: string) => Promise<void>;
   sendLocalQuery: (selectedText: string, sourceFilePath: string) => Promise<void>;
@@ -39,6 +41,7 @@ function ChatProvider({ children }: ChatProviderProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [queryMode, setQueryMode] = useState<'global' | 'local'>('global');
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
@@ -61,18 +64,26 @@ function ChatProvider({ children }: ChatProviderProps) {
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
     setError(null);
+    setQueryMode('global');
 
     try {
       const apiUrl = getApiUrl();
-      const response = await fetch(`${apiUrl}/api/ask`, {
+      const response = await fetch(`${apiUrl}/chat/global`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include auth cookies
         body: JSON.stringify({ query: message }),
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to use the chatbot.');
+        }
+        if (response.status === 429) {
+          throw new Error('Rate limit exceeded. Please try again later.');
+        }
         if (response.status === 503) {
           throw new Error('Chatbot temporarily unavailable. Please try again.');
         }
@@ -112,22 +123,33 @@ function ChatProvider({ children }: ChatProviderProps) {
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
     setError(null);
+    setQueryMode('local');
 
     try {
       const apiUrl = getApiUrl();
-      const response = await fetch(`${apiUrl}/api/ask-local`, {
+      const response = await fetch(`${apiUrl}/chat/local`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include auth cookies
         body: JSON.stringify({
-          query: selectedText,
+          query: `What does this selection explain? ${selectedText}`,
           selected_text: selectedText,
-          source_file_path: sourceFilePath,
+          file_path: sourceFilePath,
         }),
       });
 
       if (!response.ok) {
+        if (response.status === 400) {
+          throw new Error('Selected text is too short. Please select at least 50 characters.');
+        }
+        if (response.status === 401) {
+          throw new Error('Please sign in to use the chatbot.');
+        }
+        if (response.status === 429) {
+          throw new Error('Rate limit exceeded. Please try again later.');
+        }
         if (response.status === 503) {
           throw new Error('Chatbot temporarily unavailable. Please try again.');
         }
@@ -162,6 +184,7 @@ function ChatProvider({ children }: ChatProviderProps) {
         messages,
         isLoading,
         error,
+        queryMode,
         togglePanel,
         sendMessage,
         sendLocalQuery,
@@ -176,5 +199,9 @@ function ChatProvider({ children }: ChatProviderProps) {
 }
 
 export default function Root({ children }: { children: ReactNode }) {
-  return <ChatProvider>{children}</ChatProvider>;
+  return (
+    <AuthProvider>
+      <ChatProvider>{children}</ChatProvider>
+    </AuthProvider>
+  );
 }

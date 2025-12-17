@@ -1,0 +1,270 @@
+/**
+ * Recommendations Sidebar Styles
+ * Purpose: Mobile-responsive styles for recommendations sidebar
+ * Date: 2025-12-14
+ */
+
+/* Desktop: Fixed sidebar */
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: var(--ifm-navbar-height);
+  bottom: 0;
+  width: 320px;
+  background: var(--ifm-background-surface-color);
+  border-left: 1px solid var(--ifm-color-emphasis-200);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.title {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.loading,
+.error,
+.empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.875rem;
+}
+
+.error {
+  color: var(--ifm-color-danger);
+}
+
+.empty p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.recommendationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.recommendationCard {
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-50);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.recommendationCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.score {
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.scoreHigh {
+  background: var(--ifm-color-success-contrast-background);
+  color: var(--ifm-color-success-dark);
+}
+
+.scoreMedium {
+  background: var(--ifm-color-warning-contrast-background);
+  color: var(--ifm-color-warning-dark);
+}
+
+.scoreLow {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-700);
+}
+
+.chapterTitle {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  cursor: pointer;
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.chapterTitle:hover {
+  color: var(--ifm-color-primary-dark);
+  text-decoration: underline;
+}
+
+.reason {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.cardFooter {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.viewButton,
+.dismissButton {
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewButton {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
+.viewButton:hover {
+  background: var(--ifm-color-primary-dark);
+}
+
+.dismissButton {
+  padding: 0.5rem;
+  min-width: 32px;
+  min-height: 32px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.dismissButton:hover {
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-danger);
+}
+
+.refreshButton {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refreshButton:hover {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
+}
+
+/* Tablet: 768px-1023px - Side panel */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar {
+    width: 280px;
+    padding: 1.25rem 0.875rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .chapterTitle {
+    font-size: 0.875rem;
+  }
+
+  .reason {
+    font-size: 0.75rem;
+  }
+}
+
+/* Mobile: <768px - Bottom sheet */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    max-height: 50vh;
+    border-left: none;
+    border-top: 1px solid var(--ifm-color-emphasis-200);
+    border-radius: 16px 16px 0 0;
+    padding: 1rem;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .title {
+    font-size: 1rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .recommendationsList {
+    gap: 0.875rem;
+  }
+
+  .recommendationCard {
+    padding: 0.875rem;
+  }
+
+  .chapterTitle {
+    font-size: 0.875rem;
+  }
+
+  .reason {
+    font-size: 0.75rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .viewButton,
+  .dismissButton {
+    min-height: 44px; /* Touch target */
+  }
+
+  .refreshButton {
+    min-height: 44px; /* Touch target */
+  }
+}
+
+/* Touch devices - increase tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .viewButton,
+  .dismissButton,
+  .refreshButton {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .viewButton:active,
+  .refreshButton:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+
+  .dismissButton:active {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}

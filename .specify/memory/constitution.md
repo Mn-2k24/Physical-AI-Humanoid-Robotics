@@ -3,32 +3,34 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 2.0.0 → 3.0.0
+Version Change: 3.0.0 → 4.0.0
 Modified Principles:
-  - Expanded Principle VII with authentication requirements
+  - Principle VII: RAG infrastructure changed from OpenAI to Gemini API (BREAKING CHANGE)
+  - Principle VII: Backend endpoints changed (BREAKING CHANGE)
+  - Principle VII: Removed text-selection UI requirement (focus on backend only)
+  - Principle VIII: Expanded with detailed Better Auth integration requirements
 Added Sections:
-  - New Principle VIII: User Authentication & Personalization
-  - Authentication infrastructure using Better Auth
-  - Signup/Signin requirements with user background collection
-  - Frontend UI requirements for authentication flows
-  - Security and privacy requirements for user data
-  - Neon Postgres schema for user accounts and questionnaires
-Modified Sections:
-  - Technical constraints updated with Better Auth requirements
-  - Success criteria expanded with authentication validation
-  - RAG infrastructure now integrates with user authentication
-Removed Sections: None
-Templates Updated:
-  ✅ plan-template.md - Constitution Check aligns with all principles including authentication
-  ✅ spec-template.md - User scenarios support authenticated chatbot interactions
-  ✅ tasks-template.md - Task structure accommodates authentication implementation
+  - Authentication frontend UI requirements (Signup/Signin components)
+  - User background questionnaire schema details
+  - Neon Postgres data persistence requirements
+  - Security and privacy requirements
+  - Non-negotiable constraints section
+Removed Sections:
+  - OpenAI API dependencies (replaced with Gemini)
+  - Chatbot frontend implementation requirements (explicitly excluded)
+Templates Requiring Updates:
+  ✅ plan-template.md - Constitution Check will validate Gemini usage and Better Auth integration
+  ✅ spec-template.md - User scenarios support authenticated interactions
+  ✅ tasks-template.md - Task structure accommodates auth + RAG backend tasks
 Follow-up TODOs:
-  - Implement Better Auth backend integration (FastAPI + Better Auth + Neon Postgres)
-  - Create Signup/Signin UI components
-  - Design user background questionnaire (software & hardware)
-  - Integrate authentication with RAG chatbot endpoints
-  - Set up session management and token-based auth
-  - Create Neon Postgres schema for user data
+  - Migrate existing RAG embeddings from OpenAI to Gemini
+  - Implement Better Auth FastAPI integration
+  - Create Neon Postgres schema for user accounts and background data
+  - Build Signup/Signin UI components
+  - Update environment variables for Gemini API keys
+  - Remove OpenAI dependencies from backend
+  - Test authentication flow end-to-end
+  - Validate RAG pipeline with Gemini embeddings
 ==================
 -->
 
@@ -39,11 +41,11 @@ Follow-up TODOs:
 **Management**: Spec-Kit Plus
 **Authoring Tools**: Claude CLI / Claude Code
 **Publishing**: Vercel (primary), GitHub Pages
-**Interactive Features**: RAG-powered AI chatbot for content exploration
+**Interactive Features**: RAG-powered AI chatbot with user authentication for personalized learning assistance
 
 ## Core Purpose
 
-To produce a publicly accessible, academically grounded, and technically accurate interactive book that explains how AI systems can control humanoid robots in both simulated and real-world physical environments, enhanced with an intelligent chatbot for personalized learning assistance.
+To produce a publicly accessible, academically grounded, and technically accurate interactive book that explains how AI systems can control humanoid robots in both simulated and real-world physical environments, enhanced with an intelligent chatbot for personalized learning assistance secured by user authentication.
 
 **Target Audience**: Students, researchers, and developers transitioning from AI theory to embodied intelligence practice.
 
@@ -60,6 +62,7 @@ The book covers the following domains:
 - Safety, ethics, and engineering constraints
 - Open-source robotics ecosystems
 - Interactive learning through RAG-powered AI assistance
+- Personalized learning experiences through user authentication
 
 ## Core Principles
 
@@ -132,54 +135,77 @@ The book covers the following domains:
 
 ### VII. RAG-Powered Interactive Learning
 
-**Rule**: The book MUST provide an intelligent, retrieval-augmented chatbot for content exploration.
+**Rule**: The book MUST provide an intelligent, retrieval-augmented chatbot for content exploration with strict grounding in book content.
 
 **Core Requirements**:
-- **Grounded Responses**: All chatbot answers MUST be sourced strictly from book content (no hallucinations)
-- **Dual Query Modes**: Support both full-book queries and user-selected-text queries
-- **Retrieval Pipeline**: OpenAI embeddings → Qdrant similarity search → rerank → answer generation
-- **Seamless Integration**: Chatbot MUST function directly within the Docusaurus UI using custom React components
-- **Text Selection Feature**: UI MUST support text selection → "Ask AI About This" action for contextual queries
+- **Grounded Responses Only**: All chatbot answers MUST be sourced strictly from book content - zero hallucinations, zero external knowledge usage
+- **Dual Query Modes**:
+  - Global mode: Full-book queries across all chapters
+  - Local mode: Selected-text queries (users select text, chatbot answers ONLY from that selection)
+- **Strict Context Isolation**: Selected-text mode MUST ignore all unrelated content (absolute rule)
+- **Backend-Only Scope**: Frontend chatbot UI implementation is explicitly excluded
 
 **Technical Standards**:
-- **Backend**: FastAPI with three endpoints maximum:
-  - `/ask` - full-book RAG queries
-  - `/ask-local` - selected-text only queries
-  - `/track` - conversation analytics to Neon Postgres
-- **Vector Database**: Qdrant Cloud Free Tier
+- **Backend Framework**: FastAPI
+- **LLM Provider**: Gemini API (NOT OpenAI, NOT Hugging Face)
+  - Embeddings: Gemini API embeddings
+  - Answer Generation: Gemini API LLM
+- **Vector Database**: Qdrant Cloud (Free Tier)
   - Collection name: `physical_ai_book`
-  - Minimum 1,000 text chunks embedded for full coverage
-  - Embedding dimension: 1536 (OpenAI standard)
-- **Storage**: Neon Serverless Postgres for logs, conversations, and analytics
+  - Minimum 1,000 semantically meaningful text chunks
+  - Chunks MUST preserve paragraph boundaries and section headings
+  - Metadata required: `file_path`, `section_heading`, `chunk_index`
+- **Persistence**: Neon Serverless Postgres
+  - Chat interaction metadata (query, timestamps, sources)
+  - User authentication data
+  - Conversation analytics
+- **API Endpoints**: Maximum 3 endpoints
+  - `/ask` - Full-book RAG queries
+  - `/ask-local` - Selected-text only queries
+  - `/track` - Conversation analytics logging
 - **Performance**: Query latency < 3 seconds
-- **Security**: All API keys and environment variables stored server-side only (zero leakage to frontend)
-- **Reliability**: Backend MUST be stable under 500 requests/day (free-tier limits)
+- **Security**: All API keys server-side only (zero client exposure)
+
+**Retrieval Pipeline**:
+1. User query → Gemini API embedding
+2. Qdrant vector similarity search (top-k)
+3. Context filtering (global or selected-text only)
+4. Answer generation using Gemini API with retrieved chunks
+5. Similarity score threshold validation
+
+**Answer Generation Rules**:
+- Retrieved chunks are the **only source of truth**
+- Concise, factual answers only
+- Implicit grounding to source text
+- Never fabricate missing information
+- If similarity below threshold: "No relevant information found in this book."
 
 **Data Management**:
-- Logging, embeddings, and metadata MUST follow strict schema in Neon Postgres
-- All responses MUST be traceable to source book sections used
-- Selected-text mode MUST ignore all unrelated content (strict context isolation)
-- Conversation analytics MUST be visible in Neon dashboard
+- Embeddings stored in Qdrant only (NOT in Postgres)
+- Conversation logs and metadata stored in Neon Postgres
+- All responses MUST be traceable to source book sections
+- Strict schema enforcement in Neon Postgres
 
 **Success Validation**:
-- Chatbot functions fully inside the Docusaurus book UI
-- Responses are accurate and verifiable against book content
-- End-to-end pipeline deployed and publicly accessible
-- Zero security vulnerabilities in API key management
+- Backend endpoints deployed and accessible
+- Responses accurate and verifiable against book content
+- Selected-text mode strictly isolates context
+- Zero API key leakage in any layer
+- Analytics visible in Neon dashboard
 
-**Rationale**: Modern educational resources require interactive assistance. A RAG-powered chatbot enhances learning by providing instant, contextually relevant answers while ensuring accuracy through retrieval from verified book content. This transforms passive reading into active exploration without compromising technical accuracy.
+**Rationale**: Modern educational resources require interactive assistance. A RAG-powered chatbot enhances learning by providing instant, contextually relevant answers while ensuring accuracy through retrieval from verified book content. Gemini API provides cost-effective embeddings and generation without external dependencies. Strict grounding prevents misinformation and maintains educational integrity.
 
 ### VIII. User Authentication & Personalization
 
-**Rule**: The system MUST provide secure user authentication to enable personalized learning experiences and future content customization.
+**Rule**: The system MUST provide secure user authentication using Better Auth to enable personalized learning experiences and future content customization.
 
 **Core Requirements**:
-- **Authentication Provider**: ALL authentication MUST be implemented using **Better Auth** (https://www.better-auth.com) - custom authentication logic is prohibited
+- **Authentication Provider**: ALL authentication MUST be implemented using Better Auth (https://www.better-auth.com) - custom authentication logic is prohibited
 - **Mandatory Frontend UI**: Full Signup and Signin UI components MUST be provided and integrated into Docusaurus
 - **User Background Collection**: During signup, the system MUST collect:
   - **Software Background**: Programming languages, frameworks, experience level
   - **Hardware Background**: CPU/GPU availability, robotics/AI hardware access
-- **Session Management**: Secure session-based or token-based authentication for protected endpoints
+- **Session Management**: Secure session-based or token-based authentication
 - **Backend Validation**: All authenticated endpoints MUST validate auth state server-side
 
 **Signup Requirements**:
@@ -191,11 +217,11 @@ The book covers the following domains:
 - Hardware background questionnaire:
   - Available hardware (multi-select: CPU only, NVIDIA GPU, AMD GPU, Apple Silicon, Jetson, Other)
   - Robotics hardware access (multi-select: None, Simulation only, Educational robot kit, Research platform, Other)
-- All data stored in Neon Serverless Postgres with proper schema design
+- All data stored in Neon Serverless Postgres
 
 **Signin Requirements**:
 - Email and password authentication
-- "Remember me" functionality for persistent sessions
+- "Remember me" functionality
 - Password reset capability
 - Secure token generation and validation
 
@@ -211,67 +237,59 @@ The book covers the following domains:
   - "Remember me" checkbox
   - "Forgot password" link
   - Clear error messaging
-- **Integration**: Auth UI MUST be seamlessly integrated into Docusaurus navigation
-- **Responsive Design**: All auth forms MUST work on mobile, tablet, and desktop
+- **Integration**: Auth UI MUST be integrated into Docusaurus navigation
+- **Responsive Design**: All forms MUST work on mobile, tablet, desktop
+- **Explicitly Excluded**: Chatbot UI, message rendering, chat streaming interface
 
 **Backend Architecture**:
 - **Better Auth Integration**: Use Better Auth SDK for FastAPI backend
-- **Database Schema**: Neon Postgres tables:
+- **Database Schema** (Neon Postgres):
   - `users` (id, email, hashed_password, full_name, created_at, updated_at)
   - `user_profiles` (user_id, experience_level, created_at, updated_at)
   - `user_software_background` (user_id, programming_languages, frameworks)
   - `user_hardware_background` (user_id, available_hardware, robotics_hardware)
   - `auth_sessions` (session_id, user_id, token, expires_at, created_at)
-- **Protected Endpoints**: Authentication required for:
-  - `/ask` - RAG queries (future: personalized based on user background)
-  - `/ask-local` - Selected-text queries
-  - `/track` - Conversation analytics
+- **Protected Endpoints**: Authentication required for `/ask`, `/ask-local`, `/track`
 
 **Security Requirements**:
 - Password hashing using industry-standard algorithms (bcrypt, Argon2)
 - HTTPS-only for all authentication endpoints
 - CSRF protection on all forms
-- Rate limiting on signup/signin endpoints (max 5 attempts per minute)
+- Rate limiting on signup/signin (max 5 attempts per minute)
 - Secure session tokens with expiration
 - No plaintext passwords in logs or database
-- Environment variables for all secrets (JWT secret, database credentials)
+- Environment variables for all secrets
 
 **Privacy Requirements**:
 - User background data MUST NOT be exposed to chatbot responses directly
 - User data MUST NOT be used for training or shared with third parties
-- Clear privacy policy displayed during signup
+- Clear privacy policy during signup
 - GDPR-compliant data handling (right to deletion, data export)
-- Audit logs for all authentication events in Neon Postgres
+- Audit logs for authentication events in Neon Postgres
 
 **Future Personalization (Post-MVP)**:
-- Tailor chatbot responses based on user's programming language preference
-- Adjust code examples to match user's framework experience
+- Tailor responses based on user's programming language preference
+- Adjust code examples to match framework experience
 - Recommend hardware-appropriate simulation environments
 - Track learning progress and suggest next chapters
 
-**Frontend Exclusions (Explicitly NOT Required)**:
-- Chatbot UI implementation
-- Message rendering components
-- Streaming chat interface
-- Conversation history UI
-
 **Non-Negotiable Constraints**:
-- Better Auth MUST be used (no custom auth allowed)
+- Better Auth MUST be used (no custom auth)
 - Signup MUST collect software and hardware background
-- Frontend UI for auth MUST be provided and integrated
-- All user data MUST be stored in Neon Postgres
+- Frontend UI for auth MUST be provided
+- All user data MUST be in Neon Postgres
 - No authentication secrets exposed to frontend
 - No unprotected personal data in API responses
 
 **Success Validation**:
 - Users can sign up and sign in successfully
-- Background questionnaire data is captured and stored
+- Background questionnaire data captured and stored
 - Protected endpoints require valid authentication
 - Session management works across browser sessions
-- All forms are accessible and responsive
+- All forms accessible and responsive
 - Zero security vulnerabilities in authentication flow
 
-**Rationale**: Personalized learning experiences significantly improve educational outcomes. By collecting user background during signup, the system can future-proof for adaptive content delivery while maintaining strict security and privacy standards. Better Auth provides production-ready authentication without reinventing security-critical infrastructure, allowing focus on educational features. The mandatory frontend UI ensures users can immediately interact with authentication without requiring external implementation.
+**Rationale**: Personalized learning experiences significantly improve educational outcomes. By collecting user background during signup, the system can future-proof for adaptive content delivery while maintaining strict security and privacy standards. Better Auth provides production-ready authentication without reinventing security-critical infrastructure, allowing focus on educational features. The mandatory frontend UI ensures users can immediately interact with authentication.
 
 ## Writing Standards
 
@@ -341,9 +359,12 @@ Each chapter MUST include:
 - **Git**: Version control with clear commit messages
 - **RAG Infrastructure**:
   - FastAPI backend for chatbot endpoints
-  - OpenAI API for embeddings and chat completion
+  - Gemini API for embeddings and chat completion (NOT OpenAI)
   - Qdrant Cloud for vector storage and similarity search
-  - Neon Postgres for analytics and conversation logs
+  - Neon Postgres for analytics, conversation logs, and user data
+- **Authentication**:
+  - Better Auth for user authentication
+  - Neon Postgres for user accounts and background data
 
 ### Development Rules
 
@@ -353,6 +374,7 @@ Each chapter MUST include:
 4. Commit messages MUST indicate AI vs. human authorship
 5. All code examples MUST be tested before committing
 6. RAG chatbot changes MUST be tested for accuracy and security before deployment
+7. Authentication changes MUST pass security review before deployment
 
 ### Workflow Steps
 
@@ -364,7 +386,8 @@ Each chapter MUST include:
 6. **Citation Check**: Verify all claims are properly cited
 7. **Testing**: Run all code examples and simulations
 8. **RAG Integration**: Ensure new content is embedded and retrievable via chatbot
-9. **Merge**: Commit to repository with appropriate messages
+9. **Authentication Testing**: Verify auth flows work end-to-end
+10. **Merge**: Commit to repository with appropriate messages
 
 ## Constraints
 
@@ -383,12 +406,19 @@ Each chapter MUST include:
 - **Licensing**: Open-source friendly (figures must be original or openly licensed)
 - **Accessibility**: Content must be readable without AI tools
 - **RAG Infrastructure**:
-  - Vector collection: `physical_ai_book` in Qdrant
-  - Minimum 1,000 text chunks embedded
-  - Embedding dimension: 1536
+  - LLM & Embeddings: Gemini API only (NOT OpenAI, NOT Hugging Face)
+  - Vector collection: `physical_ai_book` in Qdrant Cloud (Free Tier)
+  - Minimum 1,000 semantically meaningful text chunks
+  - Chunks preserve paragraph boundaries and section headings
+  - Metadata: `file_path`, `section_heading`, `chunk_index`
   - Query latency: < 3 seconds
   - Backend endpoints: Maximum 3 (`/ask`, `/ask-local`, `/track`)
   - Environment variables: Server-side only (no client-side exposure)
+- **Authentication**:
+  - Provider: Better Auth only (custom auth prohibited)
+  - Database: Neon Serverless Postgres
+  - Frontend UI: Mandatory for Signup/Signin
+  - Security: HTTPS, rate limiting, password hashing, CSRF protection
 
 ### Quality Constraints
 
@@ -396,8 +426,9 @@ Each chapter MUST include:
 - **Citation Style**: IEEE or ACM (consistent throughout)
 - **Plagiarism**: 0% tolerance
 - **Technical Accuracy**: All claims must be verifiable
-- **Chatbot Accuracy**: All responses grounded in book content only
-- **Security**: Zero API key leakage in frontend
+- **Chatbot Accuracy**: All responses grounded in book content only (no hallucinations)
+- **Context Isolation**: Selected-text mode strictly excludes unrelated content
+- **Security**: Zero API key leakage, zero authentication vulnerabilities
 
 ## Success Criteria
 
@@ -412,13 +443,33 @@ A successful book project MUST demonstrate:
 7. **Citation Compliance**: Minimum 30 references, 50% peer-reviewed
 8. **Visual Content**: At least 20 diagrams/figures
 9. **Reproducibility**: All examples run using open-source tools
-10. **Interactive Chatbot**: RAG-powered chatbot fully functional within Docusaurus UI
-11. **Chatbot Accuracy**: All chatbot responses traceable to book sections
+10. **Interactive Chatbot**: RAG-powered chatbot fully functional backend
+11. **Chatbot Accuracy**: All responses traceable to book sections, zero hallucinations
 12. **Dual Query Modes**: Both full-book and selected-text queries working
-13. **Analytics Dashboard**: Conversation logs visible in Neon Postgres dashboard
-14. **Security Compliance**: No API keys exposed in frontend
-15. **Performance Target**: Chatbot responses delivered in < 3 seconds
-16. **Free-Tier Stability**: Backend stable under 500 requests/day
+13. **Context Isolation**: Selected-text mode strictly isolated from other content
+14. **Analytics Dashboard**: Conversation logs visible in Neon Postgres dashboard
+15. **Security Compliance**: No API keys exposed, no auth vulnerabilities
+16. **Performance Target**: Chatbot responses delivered in < 3 seconds
+17. **Authentication Works**: Users can sign up, sign in, and access protected endpoints
+18. **User Background Collected**: Signup captures software and hardware background data
+19. **Free-Tier Stability**: Backend stable under expected load on free tiers
+
+## Non-Negotiable Constraints
+
+The following constraints are absolute and MUST NOT be violated:
+
+1. **No OpenAI APIs**: Use Gemini API only for embeddings and LLM
+2. **No Hugging Face APIs**: Use Gemini API only
+3. **No Chatbot Frontend Implementation**: Backend endpoints only
+4. **No Ungrounded Answers**: All chatbot responses MUST be from book content
+5. **No External Knowledge Usage**: Chatbot MUST NOT use general world knowledge
+6. **No Custom Authentication**: Better Auth MUST be used
+7. **No Skipped Signup Background**: MUST collect software and hardware background
+8. **No Frontend Exclusion for Auth**: Signup/Signin UI MUST be provided
+9. **No Embeddings in Postgres**: Embeddings stored in Qdrant only
+10. **No Secrets in Frontend**: All API keys and secrets server-side only
+
+Violation of any constraint invalidates the implementation.
 
 ## Versioning Rules
 
@@ -427,9 +478,9 @@ A successful book project MUST demonstrate:
 - **v1.0 (MVP)**: All major chapters drafted and navigable online
 - **v1.1**: Citations, case studies, and diagrams added
 - **v1.2**: Simulation code and reproducible experiments added
-- **v2.0**: Real-world hardware integration documented + RAG chatbot integrated
-- **v2.1**: Enhanced chatbot features (conversation history, multi-turn context)
-- **v2.2**: Analytics dashboard and user feedback integration
+- **v2.0**: Real-world hardware integration documented
+- **v3.0**: RAG chatbot integrated with OpenAI (deprecated)
+- **v4.0**: RAG chatbot migrated to Gemini API + Better Auth integration
 
 ### Content Versioning
 
@@ -480,8 +531,9 @@ Each chapter MUST pass these checks before publication:
 - [ ] No plagiarism detected
 - [ ] Human technical review completed
 - [ ] Commit history shows authorship transparency
-- [ ] Content embedded in RAG vector database (for v2.0+)
-- [ ] Chatbot can accurately answer questions about the chapter (for v2.0+)
+- [ ] Content embedded in RAG vector database (v4.0+)
+- [ ] Chatbot can accurately answer questions about the chapter (v4.0+)
+- [ ] Authentication protects chatbot endpoints (v4.0+)
 
 ## Governance
 
@@ -506,7 +558,7 @@ Constitution amendments MUST follow this process:
 1. Propose change with rationale
 2. Review impact on existing content and templates
 3. Update affected specification and template files
-4. Increment constitution version appropriately
+4. Increment constitution version appropriately (MAJOR, MINOR, or PATCH)
 5. Document in Sync Impact Report
 6. Update commit history
 
@@ -528,11 +580,21 @@ Any violation of constitution principles MUST be:
 
 ## Constitution Versioning
 
-**Version**: 2.0.0
+**Version**: 4.0.0
 **Ratified**: 2025-12-04
-**Last Amended**: 2025-12-09
+**Last Amended**: 2025-12-13
 
 ### Version History
 
 - **1.0.0** (2025-12-04): Initial constitution established with complete governance framework for Physical AI & Humanoid Robotics book project
-- **2.0.0** (2025-12-09): MAJOR version bump - Added Principle VII (RAG-Powered Interactive Learning) with comprehensive chatbot requirements, infrastructure specifications, and security standards. This is a backward-incompatible change as it introduces mandatory interactive features and new technical infrastructure (FastAPI backend, Qdrant vector DB, Neon Postgres analytics) that fundamentally alter the project scope from static documentation to interactive learning platform.
+- **2.0.0** (2025-12-09): MAJOR - Added Principle VII (RAG-Powered Interactive Learning) with OpenAI-based chatbot requirements, infrastructure specifications, and security standards
+- **3.0.0** (2025-12-09): MAJOR - Added Principle VIII (User Authentication & Personalization) with Better Auth requirements, expanding interactive platform capabilities
+- **4.0.0** (2025-12-13): MAJOR - Backward-incompatible infrastructure change:
+  - RAG backend migrated from OpenAI to Gemini API (embeddings + LLM)
+  - Authentication made mandatory with Better Auth integration
+  - Frontend chatbot UI explicitly excluded (backend endpoints only)
+  - Added strict grounding requirements (no hallucinations, no external knowledge)
+  - Added selected-text mode with absolute context isolation
+  - Updated non-negotiable constraints section
+  - Expanded Principle VIII with detailed user background collection and Neon Postgres schema
+  - This version fundamentally changes the technical stack and requires full migration

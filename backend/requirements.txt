@@ -1,0 +1,43 @@
+# FastAPI Backend - RAG Chatbot & Authentication System
+# Python 3.11+
+
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Gemini API
+google-generativeai==0.3.2
+
+# Vector Database
+qdrant-client==1.16.2
+
+# Relational Database
+psycopg[pool,binary]==3.3.2
+
+# Data Validation
+pydantic==2.10.6
+pydantic-settings==2.12.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography==41.0.7
+
+# Rate Limiting
+slowapi==0.1.9
+
+# HTTP Client (for Better Auth integration)
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Utilities
+python-dotenv==1.0.0
+tenacity==8.2.3
+
+# Development & Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+black==23.12.1
+isort==5.13.2

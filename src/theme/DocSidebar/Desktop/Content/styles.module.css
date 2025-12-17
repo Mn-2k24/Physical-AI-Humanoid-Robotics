@@ -1,0 +1,12 @@
+.menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menuWithAnnouncementBar {
+  --docusaurus-announcement-bar-height: var(
+    --docusaurus-announcement-bar-height,
+    0px
+  );
+}
