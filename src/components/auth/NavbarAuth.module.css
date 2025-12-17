@@ -180,11 +180,7 @@
     font-size: 0.875rem;
   }
   /* Mobile: <768px */
-  .authButtons,
-  .userMenu,
-  .loading {
-    display: none !important;
-  }
+  
 }
 
 
