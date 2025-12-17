@@ -12,7 +12,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
  */
 export function useBackendUrl(): string {
   const { siteConfig } = useDocusaurusContext();
-  return (siteConfig.customFields?.apiUrl as string) || 'http://localhost:8000';
+  return (siteConfig.customFields?.apiUrl as string) || "https://physical-ai-humanoid-robotics-backend.hf.space";
 }
 
 /**
@@ -25,5 +25,5 @@ export const getBackendUrl = (): string => {
     return (window as any).__DOCUSAURUS_BACKEND_URL__;
   }
   // Fallback to localhost for development
-  return 'http://localhost:8000';
+  return "https://physical-ai-humanoid-robotics-backend.hf.space";
 };

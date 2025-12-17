@@ -295,6 +295,55 @@
 
 ---
 
+## Phase 11: Backend Deployment to Hugging Face Spaces (Priority: P8) 🚀
+
+**Purpose**: Deploy the backend to Hugging Face Spaces and connect it with the already deployed frontend on Vercel
+
+**Goal**: Backend is fully functional on Hugging Face Spaces and integrated with the Vercel frontend
+
+**Information**:
+- **Project Name (Hugging Face)**: `physical-ai-humanoid-robotics-backend`
+- **Hugging Face Token**: `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`
+- **Hugging Face Git Clone Link**: `git clone https://huggingface.co/spaces/Mn-2k24/physical-ai-humanoid-robotics-backend`
+- **Frontend URL (Vercel)**: `https://physical-ai-humanoid-robotics-zeta.vercel.app`
+- **Environment**: HF CLI already installed
+
+### Pre-Deployment Preparation
+
+- [ ] T122 [P] Create requirements.txt for Hugging Face backend/requirements.txt (include all Python dependencies: fastapi, uvicorn, google-generativeai, qdrant-client, psycopg[pool], pydantic, pydantic-settings, python-jose, passlib[bcrypt], slowapi, tenacity, python-multipart, python-dotenv)
+- [ ] T123 [P] Create app.py for Hugging Face backend/app.py (import main app from src.main and expose it for Hugging Face Spaces: `from src.main import app`)
+- [ ] T124 Create README.md for Hugging Face Space backend/HF_README.md (setup instructions, environment variables documentation, API endpoints documentation)
+- [ ] T125 Update CORS configuration backend/src/main.py (add Vercel frontend URL to allowed origins: `https://physical-ai-humanoid-robotics-zeta.vercel.app`, set allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
+### Hugging Face Space Configuration
+
+- [ ] T126 Create Hugging Face Space configuration .space.yaml or README.md (specify Python 3.11, SDK: gradio or docker, add environment variables: GEMINI_API_KEY, QDRANT_API_KEY, QDRANT_ENDPOINT, NEON_CONNECTION_STRING, SESSION_SECRET, FRONTEND_URL)
+- [ ] T127 [P] Configure Hugging Face Secrets (add all required environment variables as Hugging Face Space secrets: GEMINI_API_KEY, QDRANT_API_KEY, QDRANT_ENDPOINT, NEON_CONNECTION_STRING, SESSION_SECRET)
+- [ ] T128 Create Dockerfile for Hugging Face backend/Dockerfile (if needed: multi-stage build with Python 3.11-slim, copy requirements.txt and install, copy backend source code, expose port 7860, CMD: `uvicorn src.main:app --host 0.0.0.0 --port 7860`)
+
+### Deployment Execution
+
+- [ ] T129 Initialize Hugging Face git repository (login with HF CLI: `huggingface-cli login --token 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`, clone the space: `git clone https://huggingface.co/spaces/Mn-2k24/physical-ai-humanoid-robotics-backend`, navigate to cloned directory)
+- [ ] T130 Copy backend files to Hugging Face repo (copy backend/src/, backend/requirements.txt, backend/app.py, backend/Dockerfile, backend/HF_README.md to the Hugging Face Space directory)
+- [ ] T131 Commit and push to Hugging Face Space (git add all files, commit with message "Deploy backend to Hugging Face Spaces", push to Hugging Face: `git push origin main`)
+- [ ] T132 Monitor deployment logs (check Hugging Face Space build logs, verify application starts successfully, check health endpoint: `https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space/health`)
+
+### Frontend Integration
+
+- [ ] T133 Update frontend API base URL (update environment variable or config in frontend to point to Hugging Face backend: `NEXT_PUBLIC_API_URL=https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space` or similar, redeploy frontend to Vercel if needed)
+- [ ] T134 Test frontend-backend connection (navigate to `https://physical-ai-humanoid-robotics-zeta.vercel.app`, test authentication flow: signup and signin, test chatbot functionality: ask a question, verify responses are working, check browser console and network tab for errors)
+
+### Post-Deployment Validation
+
+- [ ] T135 Verify all API endpoints are accessible (test /health, /auth/signup, /auth/signin, /auth/me, /chat/global, /chat/history, verify all return successful responses from Hugging Face backend URL)
+- [ ] T136 Test end-to-end user flow (complete signup on Vercel frontend → verify backend creates user in Neon Postgres, signin → verify JWT token from Hugging Face backend, ask question in chatbot → verify Qdrant retrieval and Gemini answer generation work, check conversation history → verify database persistence)
+- [ ] T137 Monitor production metrics (check Hugging Face Space logs for errors, monitor Gemini API quota usage, verify Neon Postgres connection pool is healthy, check for any rate limiting issues)
+- [ ] T138 Document deployment process (create DEPLOYMENT.md with step-by-step instructions, document environment variables and their purposes, document troubleshooting steps for common issues, include rollback procedure)
+
+**Checkpoint**: Backend successfully deployed to Hugging Face Spaces, frontend on Vercel connects correctly, all features working in production
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -309,6 +358,9 @@
   - Can proceed in parallel with other phases once core features are complete
 - **Frontend Runtime Verification (Phase 10)**: Depends on Phase 9 completion
   - Must run frontend locally to verify all features work in real browser environment
+- **Backend Deployment (Phase 11)**: Depends on Phase 2 (Foundational) completion
+  - Can proceed once backend is functional locally
+  - Frontend deployment integration depends on backend deployment completion
 
 ### User Story Dependencies
 
@@ -400,7 +452,7 @@ With multiple developers:
 
 ## Summary
 
-**Total Tasks**: 121 tasks
+**Total Tasks**: 138 tasks
 **Task Count by User Story**:
 - Setup (Phase 1): 7 tasks
 - Foundational (Phase 2): 19 tasks (BLOCKING)
@@ -416,8 +468,9 @@ With multiple developers:
   - User Story 8 (P6 - Dark mode): 5 tasks
   - User Story 9 (P6 - Auth UI fixes): 4 tasks
 - Frontend Runtime Verification (Phase 10): 8 tasks 🧪
+- Backend Deployment to Hugging Face (Phase 11): 17 tasks 🚀
 
-**Parallel Opportunities**: 35 tasks marked [P] can run in parallel within their phases
+**Parallel Opportunities**: 38 tasks marked [P] can run in parallel within their phases
 
 **Independent Test Criteria**:
 - **US1**: Complete signup, signin, verify session persistence and access control

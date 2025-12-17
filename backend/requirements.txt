@@ -5,6 +5,8 @@
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-multipart==0.0.6
+pydantic[email]>=2.10.12,<3.0
+
 
 # Gemini API
 google-generativeai==0.3.2
@@ -16,7 +18,7 @@ qdrant-client==1.16.2
 psycopg[pool,binary]==3.3.2
 
 # Data Validation
-pydantic==2.10.6
+
 pydantic-settings==2.12.0
 
 # Authentication & Security
@@ -41,3 +43,5 @@ pytest-asyncio==0.21.1
 pytest-cov==4.1.0
 black==23.12.1
 isort==5.13.2
+
+

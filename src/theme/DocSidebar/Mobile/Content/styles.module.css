@@ -1,0 +1,18 @@
+.menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Push auth section to bottom */
+.authSection {
+  margin-top: auto;
+  padding: 0.75rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+}
+.authWrapper {
+  margin-top: 1rem;
+  list-style: none;
+}

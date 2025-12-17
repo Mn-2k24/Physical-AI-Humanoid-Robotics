@@ -1,6 +1,20 @@
+---
+title: Physical AI Humanoid Robotics Backend
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
 # Backend - RAG Chatbot & Authentication System
 
 FastAPI backend for an integrated RAG (Retrieval-Augmented Generation) chatbot with user authentication and personalized recommendations.
+
+**Deployed on**: [Hugging Face Spaces](https://huggingface.co/spaces/Mn-2k24/physical-ai-humanoid-robotics-backend)
+**Frontend**: [Vercel](https://physical-ai-humanoid-robotics-zeta.vercel.app)
 
 ## 🏗️ Architecture
 

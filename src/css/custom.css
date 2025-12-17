@@ -161,6 +161,16 @@ blockquote {
    RESPONSIVE DESIGN - MOBILE FIRST
    ======================================== */
 
+/* ================================
+   FIX: Show SidebarAuth on mobile
+   ================================ */
+@media (max-width: 996px) {
+  .navbar-sidebar__bottom {
+    display: block !important;
+  }
+}
+
+
 /* Mobile devices (<768px) */
 @media (max-width: 767px) {
   /* Hero section mobile optimizations */

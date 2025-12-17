@@ -5,14 +5,7 @@ Date: 2025-12-13
 Updated: 2025-12-14 - Added optional Sentry error tracking
 """
 
-from dotenv import load_dotenv
-import os
 
-# backend folder ke andar .env hai
-load_dotenv(dotenv_path="../backend/.env")
-
-# DEBUG: check if key is loaded
-print("Gemini Key Loaded:", os.getenv("GEMINI_API_KEY"))
 
 
 import logging
