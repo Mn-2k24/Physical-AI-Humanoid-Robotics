@@ -38,7 +38,7 @@ const config: Config = {
   // Custom fields for RAG backend API
   customFields: {
     apiUrl: process.env.NODE_ENV === 'production'
-      ? 'https://your-render-app.onrender.com'  // Update with actual Render.com URL
+      ? 'https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space'  // Hugging Face Spaces backend
       : 'http://localhost:8000',
   },
 
