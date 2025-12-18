@@ -68,11 +68,19 @@ function ChatProvider({ children }: ChatProviderProps) {
 
     try {
       const apiUrl = getApiUrl();
+
+      // Get token from localStorage for cross-origin auth
+      const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${apiUrl}/chat/global`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include', // Include auth cookies
         body: JSON.stringify({ query: message }),
       });
@@ -127,11 +135,19 @@ function ChatProvider({ children }: ChatProviderProps) {
 
     try {
       const apiUrl = getApiUrl();
+
+      // Get token from localStorage for cross-origin auth
+      const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${apiUrl}/chat/local`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include', // Include auth cookies
         body: JSON.stringify({
           query: `What does this selection explain? ${selectedText}`,
