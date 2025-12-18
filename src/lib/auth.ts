@@ -18,6 +18,11 @@ export const authConfig = {
 };
 
 /**
+ * Token storage key
+ */
+const TOKEN_KEY = 'auth_token';
+
+/**
  * API client for authentication requests
  */
 class AuthClient {
@@ -27,6 +32,32 @@ class AuthClient {
   constructor(config: typeof authConfig) {
     this.baseURL = config.baseURL;
     this.credentials = config.credentials;
+  }
+
+  /**
+   * Get stored auth token
+   */
+  getToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  /**
+   * Store auth token
+   */
+  private setToken(token: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(TOKEN_KEY, token);
+    }
+  }
+
+  /**
+   * Remove auth token
+   */
+  private clearToken(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(TOKEN_KEY);
+    }
   }
 
   /**
@@ -56,7 +87,14 @@ class AuthClient {
       throw new Error(error.detail || 'Signup failed');
     }
 
-    return response.json();
+    const result = await response.json();
+
+    // Store token for cross-origin requests
+    if (result.session?.token) {
+      this.setToken(result.session.token);
+    }
+
+    return result;
   }
 
   /**
@@ -77,17 +115,31 @@ class AuthClient {
       throw new Error(error.detail || 'Signin failed');
     }
 
-    return response.json();
+    const result = await response.json();
+
+    // Store token for cross-origin requests
+    if (result.session?.token) {
+      this.setToken(result.session.token);
+    }
+
+    return result;
   }
 
   /**
    * Sign out current user
    */
   async signout() {
+    const token = this.getToken();
+    const headers: HeadersInit = token ? { 'Authorization': `Bearer ${token}` } : {};
+
     const response = await fetch(`${this.baseURL}/auth/signout`, {
       method: 'POST',
+      headers,
       credentials: this.credentials,
     });
+
+    // Clear token regardless of response
+    this.clearToken();
 
     if (!response.ok) {
       const error = await response.json();
@@ -101,13 +153,18 @@ class AuthClient {
    * Get current user data
    */
   async getCurrentUser() {
+    const token = this.getToken();
+    const headers: HeadersInit = token ? { 'Authorization': `Bearer ${token}` } : {};
+
     const response = await fetch(`${this.baseURL}/auth/me`, {
       method: 'GET',
+      headers,
       credentials: this.credentials,
     });
 
     if (!response.ok) {
       if (response.status === 401) {
+        this.clearToken(); // Clear invalid token
         return null; // Not authenticated
       }
       const error = await response.json();
