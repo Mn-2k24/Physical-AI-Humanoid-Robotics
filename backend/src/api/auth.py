@@ -69,6 +69,7 @@ async def signup(
             "user": user_data,
             "session": {
                 "message": "Session created successfully",
+                "token": access_token,  # Return token for cross-origin auth
             },
         }
 
@@ -135,6 +136,7 @@ async def signin(
             "session": {
                 "message": "Signin successful",
                 "remember_me": signin_data.remember_me,
+                "token": access_token,  # Return token for cross-origin auth
             },
         }
 

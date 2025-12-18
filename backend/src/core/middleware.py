@@ -34,11 +34,16 @@ def setup_rate_limiting(app):
 # ============================================================================
 
 
-async def get_current_user(session_token: Optional[str] = Cookie(None, alias="session")) -> dict:
+async def get_current_user(
+    request: Request,
+    session_token: Optional[str] = Cookie(None, alias="session")
+) -> dict:
     """
     Dependency to get current authenticated user from JWT token.
+    Supports both cookie-based auth and Authorization header.
 
     Args:
+        request: FastAPI request object
         session_token: JWT token from HTTP-only cookie
 
     Returns:
@@ -47,7 +52,16 @@ async def get_current_user(session_token: Optional[str] = Cookie(None, alias="se
     Raises:
         HTTPException: If token is missing or invalid
     """
-    if not session_token:
+    # Try Authorization header first (for cross-origin)
+    token = None
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+    elif session_token:
+        # Fallback to cookie (for same-origin)
+        token = session_token
+
+    if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated. Please sign in.",
@@ -55,7 +69,7 @@ async def get_current_user(session_token: Optional[str] = Cookie(None, alias="se
         )
 
     # Decode JWT token
-    payload = decode_access_token(session_token)
+    payload = decode_access_token(token)
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
