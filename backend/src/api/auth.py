@@ -61,7 +61,7 @@ async def signup(
             value=access_token,
             httponly=True,
             secure=True,  # HTTPS only in production
-            samesite="strict",
+            samesite="none",  # Allow cross-origin cookies for Vercel frontend
             max_age=86400,  # 24 hours
         )
 
@@ -126,7 +126,7 @@ async def signin(
             value=access_token,
             httponly=True,
             secure=True,
-            samesite="strict",
+            samesite="none",  # Allow cross-origin cookies for Vercel frontend
             max_age=max_age,
         )
 
@@ -176,7 +176,7 @@ async def signout(
             await auth_service.signout(current_user["user_id"], session_token)
 
         # Clear session cookie
-        response.delete_cookie(key="session")
+        response.delete_cookie(key="session", samesite="none", secure=True)
 
         return {"message": "Signout successful"}
 
@@ -263,7 +263,7 @@ async def refresh_token(
             value=new_token,
             httponly=True,
             secure=True,
-            samesite="strict",
+            samesite="none",  # Allow cross-origin cookies for Vercel frontend
             max_age=86400,  # 24 hours
         )
 
