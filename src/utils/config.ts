@@ -12,18 +12,18 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
  */
 export function useBackendUrl(): string {
   const { siteConfig } = useDocusaurusContext();
-  return (siteConfig.customFields?.apiUrl as string) ||  "https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space";
+  return (siteConfig.customFields?.apiUrl as string) || "https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space";
 }
 
 /**
  * Direct access to backend URL (for non-hook contexts)
- * Note: This will be replaced by webpack during build time
+ * Note: This will be replaced by webpack during build timegit status
  */
 export const getBackendUrl = (): string => {
   // In browser, access via window if available
   if (typeof window !== 'undefined' && (window as any).__DOCUSAURUS_BACKEND_URL__) {
     return (window as any).__DOCUSAURUS_BACKEND_URL__;
   }
-  // Fallback to localhost for development
-  return  "https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space";
+  // Fallback to production Hugging Face Spaces URL
+  return "https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space";
 };
