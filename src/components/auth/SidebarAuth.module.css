@@ -157,10 +157,27 @@
 @media (max-width: 767px) {
   .container {
     padding: 0.875rem;
+    display: block !important; /* Ensure container is visible */
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .unauthenticated,
+  .authenticated {
+    display: flex !important; /* Ensure content is visible */
+    visibility: visible !important;
+  }
+
+  .buttons {
+    display: flex !important; /* Ensure buttons container is visible */
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
   }
 
   .message {
     font-size: 0.8125rem;
+    display: block !important;
   }
 
   .btnSignin,
@@ -170,6 +187,10 @@
     padding: 0.625rem 1rem;
     min-height: 44px; /* Touch target minimum */
     font-size: 0.8125rem;
+    display: block !important; /* Ensure buttons are visible */
+    width: 100%;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .userName {

@@ -10,3 +10,10 @@
     0px
   );
 }
+
+/* Auth section at bottom of sidebar */
+.authWrapper {
+  margin-top: auto;
+  padding: 0.75rem 0;
+  list-style: none;
+}
