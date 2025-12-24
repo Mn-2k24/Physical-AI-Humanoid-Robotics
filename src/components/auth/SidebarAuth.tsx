@@ -2,6 +2,7 @@
  * Sidebar Authentication Component
  * Purpose: Show auth state and logout button in doc sidebar
  * Date: 2025-12-14
+ * Updated: 2025-12-24 - T139: Mobile responsive implemented
  */
 
 import React from 'react';
@@ -54,6 +55,11 @@ export const SidebarAuth: React.FC = () => {
           <div className={styles.userEmail}>{user?.email}</div>
           <div className={styles.userBadge}>{user?.experience_level}</div>
         </div>
+
+        {/* T143: Add Profile link */}
+        <a href="/profile" className={styles.btnProfile}>
+          Profile
+        </a>
 
         <button
           onClick={handleSignout}

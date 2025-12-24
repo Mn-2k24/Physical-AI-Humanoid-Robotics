@@ -50,9 +50,9 @@ function ChatProvider({ children }: ChatProviderProps) {
   const getApiUrl = () => {
     if (typeof window !== 'undefined') {
       // @ts-ignore - customFields from docusaurus.config.ts
-      return window.docusaurus?.siteConfig?.customFields?.apiUrl || 'http://localhost:8000';
+      return window.docusaurus?.siteConfig?.customFields?.apiUrl || 'https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space';
     }
-    return 'http://localhost:8000';
+    return 'https://mn-2k24-physical-ai-humanoid-robotics-backend.hf.space';
   };
 
   const sendMessage = async (message: string) => {

@@ -107,6 +107,28 @@
   margin-top: 0.25rem;
 }
 
+/* T143: Profile link button */
+.btnProfile {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.btnProfile:hover {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
 .btnSignout {
   width: 100%;
   padding: 0.5rem 1rem;
@@ -143,6 +165,7 @@
 
   .btnSignin,
   .btnSignup,
+  .btnProfile,
   .btnSignout {
     padding: 0.625rem 1rem;
     min-height: 44px; /* Touch target minimum */
@@ -171,6 +194,7 @@
 
   .btnSignin,
   .btnSignup,
+  .btnProfile,
   .btnSignout {
     min-height: 40px;
   }
@@ -188,6 +212,7 @@
   /* Touch devices */
   .btnSignin,
   .btnSignup,
+  .btnProfile,
   .btnSignout {
     min-height: 44px; /* iOS HIG minimum tap target */
     min-width: 44px;
@@ -196,6 +221,7 @@
   /* Add touch feedback */
   .btnSignin:active,
   .btnSignup:active,
+  .btnProfile:active,
   .btnSignout:active {
     opacity: 0.7;
     transform: scale(0.98);
@@ -204,6 +230,7 @@
   /* Remove hover states on touch devices */
   .btnSignin:hover,
   .btnSignup:hover,
+  .btnProfile:hover,
   .btnSignout:hover {
     background: initial;
   }
@@ -214,6 +241,10 @@
 
   .btnSignup:active {
     background: var(--ifm-color-primary-dark);
+  }
+
+  .btnProfile:active {
+    background: var(--ifm-color-primary);
   }
 
   .btnSignout:active:not(:disabled) {

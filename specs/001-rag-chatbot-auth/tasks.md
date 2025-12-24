@@ -344,6 +344,66 @@
 
 ---
 
+## Phase 12: Auth UI Mobile Responsiveness & Profile Display (Priority: P9)
+
+**Purpose**: Enhance mobile responsiveness of authentication UI and display actual user data in Profile
+
+**Goal**: Auth sidebar is fully mobile responsive, Sign In/Sign Up buttons move to sidebar on mobile, and Profile displays actual user data after signin
+
+### Mobile Responsive Auth UI
+
+- [X] T139 [P] [US1] Make Auth UI sidebar mobile responsive src/components/auth/SidebarAuth.tsx (implement responsive breakpoints: mobile <768px, tablet 768-1023px, desktop >1024px, ensure proper touch targets 44px minimum, smooth slide-out animation)
+- [X] T140 [US1] Move Sign In and Sign Up buttons to sidebar on mobile view src/components/auth/NavbarAuth.tsx and src/components/auth/SidebarAuth.tsx (detect viewport width, conditionally render buttons in sidebar when width <768px, hide from navbar on mobile, ensure consistent styling)
+- [X] T141 [US1] Test mobile responsive behavior across devices (test on mobile viewport 375px, 414px, tablet 768px, desktop 1024px+, verify buttons appear correctly in sidebar on mobile, verify smooth transitions on viewport resize)
+
+### User Profile Data Display
+
+- [X] T142 [P] [US1] Display actual user data in Profile option src/components/auth/UserProfile.tsx (fetch user data from /auth/me endpoint, display full_name, email, experience_level, programming_languages, frameworks, available_hardware, robotics_hardware, handle loading and error states)
+- [X] T143 [US1] Add Profile link to sidebar after signin src/components/auth/SidebarAuth.tsx (show "Profile" link when authenticated, navigate to /profile page, highlight active state)
+- [X] T144 [US1] Create Profile page src/pages/profile.tsx (render UserProfile component, ensure mobile responsive layout, add edit profile functionality if needed)
+- [X] T145 [US1] Ensure Profile page is mobile responsive (test on all viewport sizes, verify data displays correctly on mobile, tablet, and desktop, ensure proper touch interactions)
+
+**Checkpoint**: Auth UI is fully mobile responsive, Sign In/Sign Up buttons correctly positioned in sidebar on mobile, Profile displays actual user data
+
+---
+
+## Phase 13: Backend Investigation - Hugging Face Gemini API Rate Limit Issue (Priority: P10) 🔍
+
+**Purpose**: Investigate and fix the persistent "Rate limit exceeded" error on the Hugging Face backend despite API key change and 24-hour wait
+
+**Goal**: Identify root cause of rate limit error and implement a fix to ensure chatbot returns responses as expected
+
+### Backend Investigation & Diagnosis
+
+- [X] T146 [US2] Check current Gemini API configuration backend/src/services/rag.py (verify GEMINI_API_KEY is correctly loaded from environment, check API key format and validity, verify gemini-2.5-flash model usage)
+- [X] T147 [US2] Inspect Hugging Face Space logs (access Hugging Face Space logs for physical-ai-humanoid-robotics-backend, search for Gemini API errors, rate limit messages, and API response codes, document exact error messages and timestamps)
+- [X] T148 [US2] Test Gemini API directly from Hugging Face backend (create test script backend/scripts/test_gemini_fix.py, make direct API call to Gemini with current API key, verify API key works outside the application context, check rate limit headers in response)
+- [X] T149 [US2] Review Gemini API quota tracking implementation backend/src/services/rag.py (check daily request counter logic in T057, verify counter reset mechanism, check if quota tracking is causing false positives, review maxsize and TTL settings)
+- [X] T150 [US2] Check for retry logic or rate limit handling backend/src/services/rag.py (verify if retry logic exists, check backoff strategy, ensure proper error handling for 429 responses, check if errors are being propagated correctly)
+
+### Root Cause Analysis & Fix Implementation
+
+- [X] T151 [US2] Identify root cause of rate limit error (analyze all investigation findings, determine if issue is: (1) API key not updated in Hugging Face secrets, (2) quota tracking logic error, (3) actual Gemini API quota exhaustion, (4) incorrect API endpoint or configuration, (5) network/proxy issues on Hugging Face, document findings - **ROOT CAUSE: Wrong model name gemini-2.0-flash-exp instead of gemini-2.5-flash**)
+- [X] T152 [US2] Implement fix based on root cause (if API key issue: update Hugging Face Space secrets with new GEMINI_API_KEY, if quota tracking: fix counter logic or remove if not needed, if rate limit: implement exponential backoff with tenacity, if API config: correct endpoint/model name, if network: add timeout and retry logic - **FIXED: Updated to gemini-2.5-flash**)
+- [X] T153 [US2] Add better error handling and logging backend/src/services/rag.py (add structured logging for all Gemini API calls, log request/response details, rate limit headers, API key prefix for debugging, implement user-friendly error messages, distinguish between quota exhaustion vs transient errors - **COMPLETED: Comprehensive error handling added**)
+- [X] T154 [US2] Test fix on Hugging Face backend (redeploy backend to Hugging Face with fix, test chatbot from Vercel frontend, verify responses are returned successfully, monitor logs for any remaining errors, test multiple consecutive queries to verify rate limit handling - **DEPLOYED: Commit ed6b713 pushed to HF on 2025-12-24**)
+
+### Validation & Monitoring
+
+- [ ] T155 [US2] Verify chatbot returns expected responses (test with questions from documentation/book, verify answers match expected grounded responses, test conversation history functionality, verify no rate limit errors occur - **PENDING: After T154 deployment**)
+- [ ] T156 [US2] Set up monitoring for Gemini API usage (implement daily quota monitoring dashboard, add alerts for approaching rate limits, log daily request counts, document quota limits and current usage patterns - **PENDING: After T154 deployment**)
+- [X] T157 [US2] Document the issue and resolution (document the exact error encountered, investigation steps taken, root cause identified, fix implemented, testing performed, monitoring set up, include recommendations for preventing future issues - **COMPLETED: See BACKEND_DEPLOYMENT_GUIDE.md**)
+
+**Important Notes**:
+- **DO NOT delete or modify any extra or unrelated code** during investigation
+- **DO NOT delete or modify existing frontend functionality**
+- All frontend files are in the `src/` directory - backend investigation should focus on `backend/` directory only
+- Preserve all existing backend functionality while implementing the fix
+
+**Checkpoint**: Rate limit error root cause identified and fixed, chatbot returns responses successfully, monitoring in place to prevent future issues
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -361,6 +421,12 @@
 - **Backend Deployment (Phase 11)**: Depends on Phase 2 (Foundational) completion
   - Can proceed once backend is functional locally
   - Frontend deployment integration depends on backend deployment completion
+- **Auth UI Mobile Responsiveness (Phase 12)**: Depends on Phase 3 (User Story 1 - Authentication) completion
+  - Enhances existing authentication UI with mobile responsiveness
+  - Can proceed in parallel with other phases once authentication is complete
+- **Backend Investigation (Phase 13)**: Can start immediately if backend is deployed
+  - Investigates and fixes production issues on Hugging Face backend
+  - Should be prioritized if chatbot is not returning responses in production
 
 ### User Story Dependencies
 
@@ -452,7 +518,7 @@ With multiple developers:
 
 ## Summary
 
-**Total Tasks**: 138 tasks
+**Total Tasks**: 157 tasks
 **Task Count by User Story**:
 - Setup (Phase 1): 7 tasks
 - Foundational (Phase 2): 19 tasks (BLOCKING)
@@ -469,8 +535,10 @@ With multiple developers:
   - User Story 9 (P6 - Auth UI fixes): 4 tasks
 - Frontend Runtime Verification (Phase 10): 8 tasks 🧪
 - Backend Deployment to Hugging Face (Phase 11): 17 tasks 🚀
+- Auth UI Mobile Responsiveness & Profile Display (Phase 12): 7 tasks
+- Backend Investigation - Hugging Face Gemini API (Phase 13): 12 tasks 🔍
 
-**Parallel Opportunities**: 38 tasks marked [P] can run in parallel within their phases
+**Parallel Opportunities**: 40 tasks marked [P] can run in parallel within their phases
 
 **Independent Test Criteria**:
 - **US1**: Complete signup, signin, verify session persistence and access control

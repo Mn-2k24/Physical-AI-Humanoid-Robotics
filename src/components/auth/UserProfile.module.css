@@ -1,0 +1,227 @@
+/**
+ * User Profile Styles
+ * Purpose: Styles for UserProfile component
+ * Date: 2025-12-24
+ * Task: T142
+ */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--ifm-color-emphasis-300);
+  border-top-color: var(--ifm-color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+  text-align: center;
+}
+
+.error p {
+  font-size: 1rem;
+  color: var(--ifm-color-emphasis-700);
+  margin: 0;
+}
+
+.signinLink {
+  padding: 0.75rem 1.5rem;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.signinLink:hover {
+  background: var(--ifm-color-primary-dark);
+  color: white;
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+  margin: 0;
+}
+
+.section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--ifm-color-emphasis-50);
+  border-radius: 8px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoItem + .infoItem {
+  margin-top: 1rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  font-size: 1rem;
+  color: var(--ifm-font-color-base);
+  font-weight: 500;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--ifm-color-primary-lightest);
+  color: var(--ifm-color-primary-dark);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Mobile responsive - T145 */
+
+/* Mobile: <768px */
+@media (max-width: 767px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .section {
+    padding: 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  .infoGrid {
+    gap: 0.75rem;
+  }
+
+  .signinLink {
+    padding: 0.625rem 1.25rem;
+    min-height: 44px; /* Touch target minimum */
+  }
+
+  .badge {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .tag {
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Tablet: 768px-1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Desktop: >1024px */
+@media (min-width: 1024px) {
+  .infoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Touch interaction support */
+@media (hover: none) and (pointer: coarse) {
+  .signinLink {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .signinLink:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}

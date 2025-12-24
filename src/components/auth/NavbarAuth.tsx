@@ -2,9 +2,10 @@
  * Navbar Authentication Component
  * Purpose: Show signin/signup when unauthenticated, user menu when authenticated
  * Date: 2025-12-14
+ * Updated: 2025-12-24 - T140: Hide auth buttons on mobile, show in sidebar instead
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from '@docusaurus/router';
 import { useSession } from './AuthProvider';
 import { useSignout } from '../../hooks/useAuth';
@@ -15,6 +16,24 @@ export const NavbarAuth: React.FC = () => {
   const { user, isLoading, isAuthenticated } = useSession();
   const { signout, isLoading: isSigningOut } = useSignout();
   const [showMenu, setShowMenu] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // T140: Detect mobile viewport (<768px)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Check on resize
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   const handleSignout = async () => {
     await signout();
@@ -30,7 +49,12 @@ export const NavbarAuth: React.FC = () => {
     return <div className={styles.loading}>Loading...</div>;
   }
 
+  // T140: Hide auth buttons on mobile (shown in sidebar instead)
   if (!isAuthenticated) {
+    if (isMobile) {
+      return null; // Buttons shown in sidebar on mobile
+    }
+
     return (
       <div className={styles.authButtons}>
         <a href="/auth/signin" className={styles.btnSignin}>
