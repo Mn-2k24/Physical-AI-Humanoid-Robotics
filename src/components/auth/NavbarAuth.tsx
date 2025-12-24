@@ -51,10 +51,7 @@ export const NavbarAuth: React.FC = () => {
 
   // T140: Hide auth buttons on mobile (shown in sidebar instead)
   if (!isAuthenticated) {
-    if (isMobile) {
-      return null; // Buttons shown in sidebar on mobile
-    }
-
+  
     return (
       <div className={styles.authButtons}>
         <a href="/auth/signin" className={styles.btnSignin}>
