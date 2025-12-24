@@ -2,6 +2,7 @@
  * Sidebar Auth Visibility Fix
  * Purpose: Ensure auth section is always visible in sidebar
  * Date: 2025-12-24
+ * Updated: 2025-12-24 - Aggressive mobile fix
  */
 
 /* Force menu__list to be flex container */
@@ -19,18 +20,51 @@
   opacity: 1 !important;
 }
 
-/* Mobile specific fixes */
+/* Mobile specific fixes - AGGRESSIVE */
 @media (max-width: 996px) {
+  /* Mobile sidebar container */
   .theme-doc-sidebar-container .menu__list {
     min-height: calc(100vh - 60px) !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
+  /* Auth section at bottom - FORCE VISIBILITY */
   .theme-doc-sidebar-container .menu__list > li:last-child {
     position: sticky !important;
     bottom: 0 !important;
     background: var(--ifm-background-surface-color) !important;
-    z-index: 100 !important;
-    border-top: 1px solid var(--ifm-color-emphasis-200) !important;
-    padding: 0.75rem 0 !important;
+    z-index: 1000 !important;
+    border-top: 2px solid var(--ifm-color-primary) !important;
+    padding: 1rem !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Force all children visible */
+  .theme-doc-sidebar-container .menu__list > li:last-child * {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Force container visible */
+  .theme-doc-sidebar-container .menu__list > li:last-child > div {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* Force buttons visible */
+  .theme-doc-sidebar-container .menu__list > li:last-child a,
+  .theme-doc-sidebar-container .menu__list > li:last-child button {
+    display: block !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0.5rem 0 !important;
   }
 }
