@@ -11,9 +11,21 @@
   );
 }
 
+/* Make the menu list itself a flex container */
+.menu :global(.menu__list) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
 /* Auth section at bottom of sidebar */
 .authWrapper {
-  margin-top: auto;
-  padding: 0.75rem 0;
-  list-style: none;
+  margin-top: auto !important;
+  padding: 0.75rem 0 !important;
+  list-style: none !important;
+  display: block !important;
+  visibility: visible !important;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
 }

@@ -21,6 +21,11 @@ export const SidebarAuth: React.FC = () => {
     history.push('/');
   };
 
+  // Debug: Log component render
+  React.useEffect(() => {
+    console.log('[SidebarAuth] Rendered - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading);
+  }, [isAuthenticated, isLoading]);
+
   if (isLoading) {
     return (
       <div className={styles.container}>

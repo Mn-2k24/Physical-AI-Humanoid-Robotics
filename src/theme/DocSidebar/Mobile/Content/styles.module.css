@@ -6,15 +6,27 @@
   padding-bottom: 1rem; /* Ensure space for auth section */
 }
 
+/* Make the menu list itself a flex container */
+.menu :global(.menu__list) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
 /* Push auth section to bottom and ensure visibility */
 .authWrapper {
-  margin-top: auto; /* Push to bottom */
-  padding: 0.75rem 0;
-  list-style: none;
-  position: sticky;
-  bottom: 0;
-  background: var(--ifm-background-surface-color);
-  z-index: 10;
+  margin-top: auto !important; /* Push to bottom */
+  padding: 0.75rem 0 !important;
+  list-style: none !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  background: var(--ifm-background-surface-color) !important;
+  z-index: 100 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
 }
 
 /* Deprecated - kept for backwards compatibility */

@@ -3,6 +3,9 @@
  * Theme: Tech/Robotics (Blue/Teal palette)
  */
 
+/* Import sidebar auth visibility fix */
+@import './sidebar-auth-fix.css';
+
 /* Primary color palette - Robotics blue/teal theme */
 :root {
   --ifm-color-primary: #0077be;

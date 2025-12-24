@@ -1,0 +1,36 @@
+/**
+ * Sidebar Auth Visibility Fix
+ * Purpose: Ensure auth section is always visible in sidebar
+ * Date: 2025-12-24
+ */
+
+/* Force menu__list to be flex container */
+.theme-doc-sidebar-container .menu__list {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+}
+
+/* Ensure auth wrapper is visible and at bottom */
+.theme-doc-sidebar-container .menu__list > li:last-child {
+  margin-top: auto !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Mobile specific fixes */
+@media (max-width: 996px) {
+  .theme-doc-sidebar-container .menu__list {
+    min-height: calc(100vh - 60px) !important;
+  }
+
+  .theme-doc-sidebar-container .menu__list > li:last-child {
+    position: sticky !important;
+    bottom: 0 !important;
+    background: var(--ifm-background-surface-color) !important;
+    z-index: 100 !important;
+    border-top: 1px solid var(--ifm-color-emphasis-200) !important;
+    padding: 0.75rem 0 !important;
+  }
+}
